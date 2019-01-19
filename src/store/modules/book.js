@@ -1,18 +1,18 @@
 const book = {
     // 数据区，所有共享的状态（数据）可以放在这里
   state: {
-    test: 1
+    fileName: ''
   },
-  // 改变State的状态（数据）
+  // 改变 State 的状态（数据）
   mutations: {
-    'SET_TEST': (state, newTest) => {
-      state.test = newTest
+    'SET_FILENAME': (state, fileName) => {
+      state.fileName = fileName
     }
   },
-  // 异步调用mutations里的方法
+  // 异步调用 mutations 里的方法
   actions: {
-    setTest: ({ commit, state }, newTest) => {
-      return commit('SET_TEST', newTest) // return 返回一个promise对象
+    setFileName: ({ commit }, fileName) => {
+      return commit('SET_FILENAME', fileName) // return 返回一个promise对象
     }
   }
 }

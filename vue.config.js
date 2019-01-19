@@ -3,6 +3,6 @@ module.exports = {
   //   ? './'
   //   : '/'
   devServer: {
-    port: 5070
+    port: 8029
   }
 }

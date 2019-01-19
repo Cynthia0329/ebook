@@ -1,27 +1,12 @@
 <template>
   <div id="app">
-    <span class="text">你好啊：ABCD</span>
     <router-view/>
   </div>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
-
-  export default {
-    // vue 计算属性
-    computed: {
-      ...mapGetters(['test'])
-    },
-    // vue 生命周期钩子函数
-    mounted() {
-      this.$store.dispatch('setTest', 150)
-        .then(() => {
-          // console.log('数据：' + this.$store.state.book.test)
-          console.log('数据：' + this.test)
-        })
-    }
-  }
+  export default {}
+  // 添加一个DOMContentLoaded事件，返回设置的 html.style.fontSize 的值
   document.addEventListener('DOMContentLoaded', () => {
     const html = document.querySelector('html')
     let fontSize = window.innerWidth / 10
@@ -31,9 +16,9 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "./assets/styles/global.scss";
-  .text {
-    font-family: 'Days One';
-    font-size: px2rem(20)
+  #app {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
   }
 </style>
