@@ -5,30 +5,36 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { ebookMixin } from '../../utils/mixin'
 
   import Epub from 'epubjs'
   global.ePub = Epub
 
   export default {
-    computed: {
-      ...mapGetters(['fileName'])
-    },
+    mixins: [ebookMixin],
     methods: {
       // 上一页
       prevPage() {
         if (this.rendition) {
           this.rendition.prev()
+          this.hideTitleAndMenu()
         }
       },
       // 下一页
       nextPage() {
         if (this.rendition) {
           this.rendition.next()
+          this.hideTitleAndMenu()
         }
       },
       // 切换 主题栏和菜单栏 的显示和隐藏
-      toggleTitleAndMenu() {},
+      toggleTitleAndMenu() {
+        this.setMenuVisible(!this.menuVisible)
+      },
+      // 隐藏 主题栏和菜单栏
+      hideTitleAndMenu() {
+        this.setMenuVisible(false)
+      },
       initEpub() {
         // 拼接静态服务器资源的位置+文件名字
         const url = 'http://192.168.1.102:5070/epub/' + this.fileName + '.epub'
@@ -71,7 +77,7 @@
       // 根据地址栏的信息 拼取图书的链接后缀
       const fileName = this.$route.params.fileName.split('|').join('/')
       // 将获取的链接后缀 保存到store中
-      this.$store.dispatch('setFileName', fileName)
+      this.setFileName(fileName)
         .then(() => {
           this.initEpub()
         })

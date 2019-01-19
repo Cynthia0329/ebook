@@ -1,0 +1,26 @@
+$ratio: 375 / 10;
+
+@function px2rem($px) {
+  @return $px / $ratio + rem;
+}
+
+// 使子元素居中显示
+@mixin center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+// 使子元素居左显示
+@mixin left {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+// 使子元素居由显示
+@mixin right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
