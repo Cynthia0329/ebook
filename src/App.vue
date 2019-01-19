@@ -1,31 +1,39 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <span class="text">你好啊：ABCD</span>
     <router-view/>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-}
+<script>
+  import { mapGetters } from 'vuex'
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+  export default {
+    // vue 计算属性
+    computed: {
+      ...mapGetters(['test'])
+    },
+    // vue 生命周期钩子函数
+    mounted() {
+      this.$store.dispatch('setTest', 150)
+        .then(() => {
+          // console.log('数据：' + this.$store.state.book.test)
+          console.log('数据：' + this.test)
+        })
+    }
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const html = document.querySelector('html')
+    let fontSize = window.innerWidth / 10
+    fontSize = fontSize > 50 ? 50 : fontSize
+    html.style.fontSize = fontSize + 'px'
+  })
+</script>
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+<style lang="scss" scoped>
+  @import "./assets/styles/global.scss";
+  .text {
+    font-family: 'Days One';
+    font-size: px2rem(20)
+  }
 </style>
