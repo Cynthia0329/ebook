@@ -2,7 +2,7 @@
   <div class="menu-bar">
     <!-- ⭐菜单栏底层 -->
       <transition name="slide-up">
-      <div class="menu-wrapper" :class="{'hide-box-shadow': !menuVisible}" v-show="menuVisible">
+      <div class="menu-wrapper" :class="{'hide-box-shadow': !menuVisible || menuVisible >= 0}" v-show="menuVisible">
         <div class="icon-wrapper">
           <span class="icon-menu" @click="showSetting(3)"></span>
         </div>
@@ -17,17 +17,25 @@
         </div>
       </div>
       </transition>
+      <ebook-setting-font></ebook-setting-font>
+      <ebook-setting-font-popup></ebook-setting-font-popup>
   </div>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+import EbookSettingFont from './EbookSettingFont'
+import EbookSettingFontPopup from './EbookSettingFontPopup'
+  import { ebookMixin } from '../../utils/mixin'
   export default {
-    computed: {
-      ...mapGetters(['menuVisible'])
-    },
+    mixins: [ebookMixin],
     methods: {
-      showSetting (key) {}
+      showSetting (key) {
+        this.setSettingVisible(key)
+      }
+    },
+    components: {
+      EbookSettingFont,
+      EbookSettingFontPopup
     }
   }
 </script>

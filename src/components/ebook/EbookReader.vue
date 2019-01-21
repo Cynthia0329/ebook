@@ -27,27 +27,38 @@
           this.hideTitleAndMenu()
         }
       },
-      // 切换 主题栏和菜单栏 的显示和隐藏
+      // 切换 栏目的显示和隐藏
       toggleTitleAndMenu() {
+        if (this.menuVisible) {
+          this.setSettingVisible(-1)
+          this.setFontFamilyVisible(false)
+        }
         this.setMenuVisible(!this.menuVisible)
       },
-      // 隐藏 主题栏和菜单栏
+      // 隐藏所有栏目
       hideTitleAndMenu() {
         this.setMenuVisible(false)
+        this.setSettingVisible(-1)
+        this.setFontFamilyVisible(false)
       },
       initEpub() {
         // 拼接静态服务器资源的位置+文件名字
         const url = 'http://192.168.1.102:5070/epub/' + this.fileName + '.epub'
         // 实例化一个 book对象
         this.book = new Epub(url)
+        // 将实例化的book对象 传给公共变量 currentBook
+        this.setCurrentBook(this.book)
+
         // 渲染这个book对象
         this.rendition = this.book.renderTo('read', {
           width: innerWidth,
           height: innerHeight
           // method: 'default' // 微信浏览的兼容性配置
         })
+
         // 将渲染的结果展示在页面上
         this.rendition.display()
+
         // this.rendition.on() 方法可以将事件绑定到 图书的<iframe> 上
         // 通过touch方法来进行手势操作
         this.rendition.on('touchstart', event => {
@@ -71,9 +82,26 @@
           // event.preventDefault()
           event.stopPropagation()
         })
+
+        // rendition钩子函数
+        // 表示当阅读器渲染完可以获取资源文件的时候渲染以下方法
+        // contents对象：主要用来管理资源文件
+        this.rendition.hooks.content.register(contents => {
+          // 手动添加样式文件
+          Promise.all([
+            contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/daysOne.css`),
+            contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/cabin.css`),
+            contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/montserrat.css`),
+            contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/tangerine.css`)
+          ])
+          .then (() => {
+            // console.log('字体全部加载完毕...')
+          })
+        })
       }
     },
     mounted() {
+      console.log(`${process.env.VUE_APE_RES_URL}/fonts/daysOne.css`)
       // 根据地址栏的信息 拼取图书的链接后缀
       const fileName = this.$route.params.fileName.split('|').join('/')
       // 将获取的链接后缀 保存到store中

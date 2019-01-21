@@ -1,20 +1,36 @@
 const book = {
-    // 数据区，所有共享的状态（数据）可以放在这里
   state: {
-    fileName: '', // 分类名+图书名 路径形式
-    menuVisible: false // 标题栏和菜单栏？的显示状态
+    fileName: '',
+    menuVisible: false,
+    settingVisible: -1,
+    defaultFontSize: 16,
+    defaultFontFamily: 'Default',
+    currentBook: null,
+    fontFamilyVisible: false
   },
-  // 改变 State 的状态（数据）
   mutations: {
     'SET_FILENAME': (state, fileName) => {
       state.fileName = fileName
     },
-    'SET_MENUVISIBLE': (state, menuVisible) => {
-      state.menuVisible = menuVisible
+    'SET_MENU_VISIBLE': (state, visible) => {
+      state.menuVisible = visible
+    },
+    'SET_SETTING_VISIBLE': (state, visible) => {
+      state.settingVisible = visible
+    },
+    'SET_DEFAULT_FONT_SIZE': (state, fontSize) => {
+      state.defaultFontSize = fontSize
+    },
+    'SET_DEFAULT_FONT_FAMILY': (state, defaultFontFamily) => {
+      state.defaultFontFamily = defaultFontFamily
+    },
+    'SET_CURRENT_BOOK': (state, currentBook) => {
+      state.currentBook = currentBook
+    },
+    'SET_FONT_FAMILY_VISIBLE': (state, fontFamilyVisible) => {
+      state.fontFamilyVisible = fontFamilyVisible
     }
   }
-  // 异步调用 mutations 里的方法
-  // actions: {}
 }
 
 export default book
