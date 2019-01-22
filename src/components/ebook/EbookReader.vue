@@ -6,6 +6,7 @@
 
 <script>
   import { ebookMixin } from '../../utils/mixin'
+  import { getFontFamily,saveFontFamily,getFontSize,saveFontSize } from '../../utils/localStorage'
 
   import Epub from 'epubjs'
   global.ePub = Epub
@@ -58,6 +59,25 @@
 
         // 将渲染的结果展示在页面上
         this.rendition.display()
+          // 获取离线存储的值
+          .then(() => {
+            // 离线存储的字体字号
+            let fontSize = getFontSize(this.fileName)
+            if (!fontSize) {
+              saveFontSize(this.fileName, this.defaultFontSize)
+            } else {
+              this.rendition.themes.fontSize(fontSize + 'px')
+              this.setDefaultFontSize(fontSize)
+            }
+            // 离线存储的字体样式
+            let fontFamily = getFontFamily(this.fileName)
+            if (!fontFamily) {
+              saveFontFamily(this.fileName, this.defaultFontFamily)
+            } else {
+              this.rendition.themes.font(fontFamily)
+              this.setDefaultFontFamily(fontFamily)
+            }
+          })
 
         // this.rendition.on() 方法可以将事件绑定到 图书的<iframe> 上
         // 通过touch方法来进行手势操作
@@ -101,7 +121,6 @@
       }
     },
     mounted() {
-      console.log(`${process.env.VUE_APE_RES_URL}/fonts/daysOne.css`)
       // 根据地址栏的信息 拼取图书的链接后缀
       const fileName = this.$route.params.fileName.split('|').join('/')
       // 将获取的链接后缀 保存到store中

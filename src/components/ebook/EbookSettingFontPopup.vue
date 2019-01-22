@@ -24,7 +24,7 @@
 <script>
   import { ebookMixin } from '../../utils/mixin'
   import { FONT_FAMILY } from '../../utils/book'
-  import { setLocalStorage, getLocalStorage,removeLocalStorage,clearLocalStorage } from '../../utils/localStorage'
+  import { saveFontFamily, getFontFamily } from '../../utils/localStorage'
 
   export default {
     mixins: [ebookMixin],
@@ -41,6 +41,7 @@
         return this.defaultFontFamily === item.font
       },
       setFontFamily(font) {
+        saveFontFamily(this.fileName, font)
         this.setDefaultFontFamily(font)
         if (font === 'Default') {
           this.currentBook.rendition.themes.font('微软雅黑')
