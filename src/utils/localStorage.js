@@ -76,3 +76,12 @@ export function getLocale() {
 export function saveLocale(locale) {
   return setLocalStorage('locale', locale)
 }
+
+// 默认主题设置的离线存储
+export function getTheme(fileName) {
+  return getBookObject(fileName, 'theme')
+}
+
+export function saveTheme(fileName, theme) {
+  setBookObject(fileName, 'theme', theme)
+}

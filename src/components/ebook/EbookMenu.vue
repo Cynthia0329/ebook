@@ -1,31 +1,36 @@
 <template>
   <div class="menu-bar">
-    <!-- ⭐菜单栏底层 -->
-      <transition name="slide-up">
-      <div class="menu-wrapper" :class="{'hide-box-shadow': !menuVisible || menuVisible >= 0}" v-show="menuVisible">
-        <div class="icon-wrapper">
-          <span class="icon-menu" @click="showSetting(3)"></span>
-        </div>
-        <div class="icon-wrapper">
-          <span class="icon-progress" @click="showSetting(2)"></span>
-        </div>
-        <div class="icon-wrapper">
-          <span class="icon-bright" @click="showSetting(1)"></span>
-        </div>
-        <div class="icon-wrapper">
-          <span class="icon-A" @click="showSetting(0)"></span>
-        </div>
+    
+    <transition name="slide-up">
+    <div class="menu-wrapper" :class="{'hide-box-shadow': !menuVisible || menuVisible >= 0}" v-show="menuVisible">
+      <div class="icon-wrapper">
+        <span class="icon-menu" @click="showSetting(3)"></span>
       </div>
-      </transition>
-      <ebook-setting-font></ebook-setting-font>
-      <ebook-setting-font-popup></ebook-setting-font-popup>
+      <div class="icon-wrapper">
+        <span class="icon-progress" @click="showSetting(2)"></span>
+      </div>
+      <div class="icon-wrapper">
+        <span class="icon-bright" @click="showSetting(1)"></span>
+      </div>
+      <div class="icon-wrapper">
+        <span class="icon-A" @click="showSetting(0)"></span>
+      </div>
+    </div>
+    </transition>
+
+    <ebook-setting-font></ebook-setting-font>
+    <ebook-setting-font-popup></ebook-setting-font-popup>
+    <ebook-setting-theme></ebook-setting-theme>
+
   </div>
 </template>
 
 <script>
-import EbookSettingFont from './EbookSettingFont'
-import EbookSettingFontPopup from './EbookSettingFontPopup'
+  import EbookSettingFont from './EbookSettingFont'
+  import EbookSettingFontPopup from './EbookSettingFontPopup'
+  import EbookSettingTheme from './EbookSettingTheme'
   import { ebookMixin } from '../../utils/mixin'
+
   export default {
     mixins: [ebookMixin],
     methods: {
@@ -35,7 +40,8 @@ import EbookSettingFontPopup from './EbookSettingFontPopup'
     },
     components: {
       EbookSettingFont,
-      EbookSettingFontPopup
+      EbookSettingFontPopup,
+      EbookSettingTheme
     }
   }
 </script>

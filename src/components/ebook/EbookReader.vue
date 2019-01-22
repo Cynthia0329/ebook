@@ -6,7 +6,7 @@
 
 <script>
   import { ebookMixin } from '../../utils/mixin'
-  import { getFontFamily,saveFontFamily,getFontSize,saveFontSize } from '../../utils/localStorage'
+  import { getFontFamily, saveFontFamily, getFontSize, saveFontSize, getTheme, saveTheme } from '../../utils/localStorage'
 
   import Epub from 'epubjs'
   global.ePub = Epub
@@ -42,9 +42,45 @@
         this.setSettingVisible(-1)
         this.setFontFamilyVisible(false)
       },
+      // 初始化字体
+      initFontFamily() {
+        let fontFamily = getFontFamily(this.fileName)
+        if (!fontFamily) {
+          saveFontFamily(this.fileName, this.defaultFontFamily)
+        } else {
+          this.rendition.themes.font(fontFamily)
+          this.setDefaultFontFamily(fontFamily)
+        }
+      },
+      // 初始化字号
+      initFontSize() {
+        let fontSize = getFontSize(this.fileName)
+        if (!fontSize) {
+          saveFontSize(this.fileName, this.defaultFontSize)
+        } else {
+          this.rendition.themes.fontSize(fontSize + 'px')
+          this.setDefaultFontSize(fontSize)
+        }
+      },
+      // 初始化主题
+      initTheme() {
+        // 遍历自定义的主题数组，将每一个主题的名字和样式进行注册
+        this.themeList.forEach(theme => {
+          this.rendition.themes.register(theme.name, theme.style)
+        })
+        // 获取本地离线存储的默认主题设置的值
+        let defaultTheme = getTheme(this.fileName)
+        if (!defaultTheme) {
+          saveTheme(this.fileName, this.defaultTheme)
+        } else {
+          this.setDefaultTheme(defaultTheme)
+          this.rendition.themes.select(defaultTheme)
+        }
+      },
+      // ⭐初始化电子书
       initEpub() {
         // 拼接静态服务器资源的位置+文件名字
-        const url = 'http://192.168.1.102:5070/epub/' + this.fileName + '.epub'
+        const url = `${process.env.VUE_APP_RES_URL}` + '/epub/' + this.fileName + '.epub'
         // 实例化一个 book对象
         this.book = new Epub(url)
         // 将实例化的book对象 传给公共变量 currentBook
@@ -59,24 +95,11 @@
 
         // 将渲染的结果展示在页面上
         this.rendition.display()
-          // 获取离线存储的值
           .then(() => {
-            // 离线存储的字体字号
-            let fontSize = getFontSize(this.fileName)
-            if (!fontSize) {
-              saveFontSize(this.fileName, this.defaultFontSize)
-            } else {
-              this.rendition.themes.fontSize(fontSize + 'px')
-              this.setDefaultFontSize(fontSize)
-            }
-            // 离线存储的字体样式
-            let fontFamily = getFontFamily(this.fileName)
-            if (!fontFamily) {
-              saveFontFamily(this.fileName, this.defaultFontFamily)
-            } else {
-              this.rendition.themes.font(fontFamily)
-              this.setDefaultFontFamily(fontFamily)
-            }
+            this.initTheme()
+            this.initFontSize()
+            this.initFontFamily()
+            this.initGlobalStyle()
           })
 
         // this.rendition.on() 方法可以将事件绑定到 图书的<iframe> 上
