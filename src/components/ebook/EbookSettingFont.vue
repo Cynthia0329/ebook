@@ -1,5 +1,4 @@
 <template>
-  <!-- ⭐设置栏（菜单栏点击之后出现 其中一个） -->
   <transition name="slide-up">
     <div class="setting-wrapper" v-show="menuVisible && settingVisible === 0">
       <div class="setting-font-size">

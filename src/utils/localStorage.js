@@ -67,3 +67,12 @@ export function getFontSize(fileName) {
 export function saveFontSize(fileName, fontSize) {
   setBookObject(fileName, 'fontSize', fontSize)
 }
+
+// 默认字体语言的离线存储
+export function getLocale() {
+  return getLocalStorage('locale')
+}
+
+export function saveLocale(locale) {
+  return setLocalStorage('locale', locale)
+}
