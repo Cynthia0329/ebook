@@ -1,6 +1,6 @@
 import { mapGetters, mapActions } from 'vuex'
-import { themeList, addCss, removeAllCss } from './book'
-import { saveLocation } from './localStorage'
+import { themeList, addCss, removeAllCss, getReadTimeByMinute } from './book'
+import { saveLocation, getSingleReadTime, getReadTime } from './localStorage'
 
 export const ebookMixin = {
   computed: {
@@ -86,5 +86,16 @@ export const ebookMixin = {
           })
         }
     },
+    // 获取该书的阅读时间(已转换成文本格式的时间)
+    // 如果fileName为空：则返回总的阅读时间
+    getReadTimeText(fileName) {
+      if (fileName) {
+        const readTime = getSingleReadTime(fileName)
+        return this.$t('book.haveRead').replace('$1', getReadTimeByMinute(readTime))
+      } else {
+        const readTime = getReadTime()
+        return this.$t('book.haveRead').replace('$1', getReadTimeByMinute(readTime))
+      }
+    }
   }
 }

@@ -3,7 +3,7 @@
     <div class="setting-wrapper" v-show="menuVisible && settingVisible === 2">
       <div class="setting-progress">
         <div class="read-time-wrapper">
-          <span class="read-time-text">阅读时间</span>
+          <span class="read-time-text">{{ getReadTimeText(this.fileName) }}</span>
           <span class="icon-forward"></span>
         </div>
         <div class="progress-wrapper">
@@ -106,6 +106,13 @@
     // vue钩子函数，对 background-size 进行初始化
     updated() {
       this.updateProgressBg()
+    },
+    mounted() {
+      let readTime1 = this.getReadTimeText(this.fileName)
+      console.log('该书的阅读时长：' + readTime1)
+
+      let readTime2 = this.getReadTimeText()
+      console.log('总的的阅读时长：' + readTime2)
     }
   }
 </script>

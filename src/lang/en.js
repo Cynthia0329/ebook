@@ -127,7 +127,7 @@ const messages = {
     pulldownDeleteMark: 'Pull down to delete bookmark',
     releaseDeleteMark: 'Release to add bookmark',
     selectFont: 'Select Font',
-    haveRead: 'Already read $1 minutes',
+    haveRead: 'Already read $1',
     themeDefault: 'Default',
     themeGold: 'Grace',
     themeEye: 'Eye',

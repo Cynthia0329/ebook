@@ -174,7 +174,7 @@
         .then(() => {
           this.initEpub()
         })
-}
+    }
   }
 </script>
 

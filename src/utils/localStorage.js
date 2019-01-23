@@ -50,6 +50,8 @@ export function getBookObject(fileName, key) {
   }
 }
 
+// ⭐每本书的本地存储
+
 // 字体样式的离线存储
 export function getFontFamily(fileName) {
   return getBookObject(fileName, 'fontFamily')
@@ -68,15 +70,6 @@ export function saveFontSize(fileName, fontSize) {
   setBookObject(fileName, 'fontSize', fontSize)
 }
 
-// 默认字体语言的离线存储
-export function getLocale() {
-  return getLocalStorage('locale')
-}
-
-export function saveLocale(locale) {
-  return setLocalStorage('locale', locale)
-}
-
 // 默认主题设置的离线存储
 export function getTheme(fileName) {
   return getBookObject(fileName, 'theme')
@@ -93,4 +86,33 @@ export function getLocation(fileName) {
 
 export function saveLocation(fileName, location) {
   setBookObject(fileName, 'location', location)
+}
+
+// 单独每本书的阅读时长的离线存储
+export function getSingleReadTime(fileName) {
+  return getBookObject(fileName, 'singleReadTime')
+}
+
+export function saveSingleReadTime(fileName, time) {
+  setBookObject(fileName, 'singleReadTime', time)
+}
+
+// ⭐全局的本地存储
+
+// 总阅读时长的离线存储
+export function getReadTime() {
+  return getLocalStorage('readTime')
+}
+
+export function saveReadTime(time) {
+  return setLocalStorage('readTime', time)
+}
+
+// 默认字体语言的离线存储
+export function getLocale() {
+  return getLocalStorage('locale')
+}
+
+export function saveLocale(locale) {
+  return setLocalStorage('locale', locale)
 }
