@@ -85,3 +85,12 @@ export function getTheme(fileName) {
 export function saveTheme(fileName, theme) {
   setBookObject(fileName, 'theme', theme)
 }
+
+// 当前进度的离线存储
+export function getLocation(fileName) {
+  return getBookObject(fileName, 'location')
+}
+
+export function saveLocation(fileName, location) {
+  setBookObject(fileName, 'location', location)
+}

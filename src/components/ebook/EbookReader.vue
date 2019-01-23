@@ -6,7 +6,7 @@
 
 <script>
   import { ebookMixin } from '../../utils/mixin'
-  import { getFontFamily, saveFontFamily, getFontSize, saveFontSize, getTheme, saveTheme } from '../../utils/localStorage'
+  import { getFontFamily, saveFontFamily, getFontSize, saveFontSize, getTheme, saveTheme, getLocation } from '../../utils/localStorage'
 
   import Epub from 'epubjs'
   global.ePub = Epub
@@ -18,6 +18,9 @@
       prevPage() {
         if (this.rendition) {
           this.rendition.prev()
+            .then(() => {
+              this.refreshLocation()
+            })
           this.hideTitleAndMenu()
         }
       },
@@ -25,6 +28,9 @@
       nextPage() {
         if (this.rendition) {
           this.rendition.next()
+            .then(() => {
+              this.refreshLocation()
+            })
           this.hideTitleAndMenu()
         }
       },
@@ -77,31 +83,41 @@
           this.rendition.themes.select(defaultTheme)
         }
       },
-      // ⭐初始化电子书
-      initEpub() {
-        // 拼接静态服务器资源的位置+文件名字
-        const url = `${process.env.VUE_APP_RES_URL}` + '/epub/' + this.fileName + '.epub'
-        // 实例化一个 book对象
-        this.book = new Epub(url)
-        // 将实例化的book对象 传给公共变量 currentBook
-        this.setCurrentBook(this.book)
-
-        // 渲染这个book对象
+      // 图书渲染的初始化过程
+      initRendition() {
+        // 渲染book对象
         this.rendition = this.book.renderTo('read', {
           width: innerWidth,
           height: innerHeight
           // method: 'default' // 微信浏览的兼容性配置
         })
-
-        // 将渲染的结果展示在页面上
-        this.rendition.display()
-          .then(() => {
-            this.initTheme()
-            this.initFontSize()
-            this.initFontFamily()
-            this.initGlobalStyle()
+        // 获取本地存储的进度，并将渲染的结果展示在页面上
+        // 渲染过程中调用几个初始化的方法
+        const location = getLocation(this.fileName)
+        this.display(location, () => {
+          this.initTheme()
+          this.initFontSize()
+          this.initFontFamily()
+          this.initGlobalStyle()
+        })
+        // rendition钩子函数
+        // 表示当阅读器渲染完可以获取资源文件的时候渲染以下方法
+        // contents对象：主要用来管理资源文件
+        this.rendition.hooks.content.register(contents => {
+          // 手动添加样式文件
+          Promise.all([
+            contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/daysOne.css`),
+            contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/cabin.css`),
+            contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/montserrat.css`),
+            contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/tangerine.css`)
+          ])
+          .then (() => {
+            // console.log('字体全部加载完毕...')
           })
-
+        })
+      },
+      // 初始化触摸手势
+      initGesture() {
         // this.rendition.on() 方法可以将事件绑定到 图书的<iframe> 上
         // 通过touch方法来进行手势操作
         this.rendition.on('touchstart', event => {
@@ -125,22 +141,29 @@
           // event.preventDefault()
           event.stopPropagation()
         })
+      },
+      // 初始化电子书（在这里调用上面的方法）
+      initEpub() {
+        // 拼接静态服务器资源的位置+文件名字
+        const url = `${process.env.VUE_APP_RES_URL}` + '/epub/' + this.fileName + '.epub'
+        // 实例化一个 book对象
+        this.book = new Epub(url)
+        // 将实例化的book对象 传给公共变量 currentBook
+        this.setCurrentBook(this.book)
 
-        // rendition钩子函数
-        // 表示当阅读器渲染完可以获取资源文件的时候渲染以下方法
-        // contents对象：主要用来管理资源文件
-        this.rendition.hooks.content.register(contents => {
-          // 手动添加样式文件
-          Promise.all([
-            contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/daysOne.css`),
-            contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/cabin.css`),
-            contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/montserrat.css`),
-            contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/tangerine.css`)
-          ])
-          .then (() => {
-            // console.log('字体全部加载完毕...')
+        this.initRendition()  // 图书渲染的初始化过程
+        this.initGesture()  // 初始化触摸手势
+
+        // 钩子函数ready()：在book解析的过程全部结束后调用
+        this.book.ready
+          .then(() => {
+            // generate() 传入需要分页的一页显示的文字数，生成最终的分页数
+            return this.book.locations.generate(750 * (window.innerWidth / 375) * (getFontSize(this.fileName) / 16))
           })
-        })
+          .then(locations => {
+            this.setBookAvailable(true)
+            this.refreshLocation()
+          })
       }
     },
     mounted() {

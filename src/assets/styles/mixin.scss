@@ -24,3 +24,10 @@ $ratio: 375 / 10;
   justify-content: flex-end;
   align-items: center;
 }
+
+// 文字超过一行省略显示
+@mixin ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
