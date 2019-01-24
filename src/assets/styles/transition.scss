@@ -28,8 +28,8 @@
     transform: translate3d(0,100%,0);
     opacity: 0;
   }
-  .popup-slide-up-enter-to, .popup-slide-up-leave {
+  // 公共的原点位置
+  .popup-slide-up-enter-to, .popup-slide-up-leave, .fade-slide-right-enter-to, .fade-slide-right-leave, {
     transform: translate3d(0,0,0);
     opacity: 1;
   }
-  

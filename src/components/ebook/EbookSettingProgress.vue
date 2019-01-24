@@ -37,21 +37,6 @@
 
   export default {
     mixins: [ebookMixin],
-    data() {
-      return {
-
-      }
-    },
-    computed: {
-      getSectionName() {
-        if (this.section) {
-          const sectionInfo = this.currentBook.section(this.section)
-          if (sectionInfo && sectionInfo.href) {
-            return this.currentBook.navigation.get(sectionInfo.href).label
-          }
-        }
-      }
-    },
     methods: {
       // 进度条拖动过程中调用的方法
       onProgressInput(progress) {
@@ -106,13 +91,6 @@
     // vue钩子函数，对 background-size 进行初始化
     updated() {
       this.updateProgressBg()
-    },
-    mounted() {
-      let readTime1 = this.getReadTimeText(this.fileName)
-      console.log('该书的阅读时长：' + readTime1)
-
-      let readTime2 = this.getReadTimeText()
-      console.log('总的的阅读时长：' + readTime2)
     }
   }
 </script>

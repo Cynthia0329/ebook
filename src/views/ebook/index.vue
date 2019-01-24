@@ -27,6 +27,7 @@
       startLoopReadTime() {
         let singleReadTime = getSingleReadTime(this.fileName)
         let readTime = getReadTime()
+        let safeTime = 0
         if (!readTime) {
           readTime = 0
         }
@@ -36,9 +37,14 @@
         this.task = setInterval(() => {
           readTime++
           singleReadTime++
+          safeTime++
           if (readTime % 30 === 0) {
             saveReadTime(readTime)
             saveSingleReadTime(this.fileName,singleReadTime)
+          }
+          if (safeTime > 3600) {
+            alert('你已经连续阅读了1个小时，请休息一下')
+            safeTime = 0
           }
         }, 1000)
       }

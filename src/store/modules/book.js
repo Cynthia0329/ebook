@@ -10,7 +10,10 @@ const book = {
     defaultTheme: 'Default',
     progress: 0,
     bookAvailable: false,
-    section: 0
+    section: 0,
+    cover: null,
+    metadata: null,
+    navigation: null,
   },
   mutations: {
     'SET_FILENAME': (state, fileName) => {
@@ -45,6 +48,15 @@ const book = {
     },
     'SET_SECTION': (state, section) => {
       state.section = section
+    },
+    'SET_COVER': (state, cover) => {
+      state.cover = cover
+    },
+    'SET_METADATA': (state, metadata) => {
+      state.metadata = metadata
+    },
+    'SET_NAVIGATION': (state, navigation) => {
+      state.navigation = navigation
     }
   }
 }

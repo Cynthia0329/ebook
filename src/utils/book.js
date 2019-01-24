@@ -93,7 +93,7 @@ export function removeAllCss() {
 // 将秒数转换为分钟数
 export function getReadTimeByMinute(readTime) {
   if (!readTime) {
-      return 0
+      return '0 分钟'
     } else {
       let StatusMinute = Math.ceil(readTime / 60)
       return timeStamp(StatusMinute)
@@ -114,7 +114,7 @@ export function timeStamp(StatusMinute) {
     if (hour > 0) {
       StatusMinute += hour + '小时'
   }
-    if (min > 0) {
+    if (min >= 0) {
       StatusMinute += parseFloat(min) + '分钟'
   }
     return StatusMinute
@@ -125,9 +125,14 @@ export function timeStamp(StatusMinute) {
     if (hour > 0) {
         StatusMinute += hour + 'h-'
     }
-    if (min > 0) {
+    if (min >= 0) {
         StatusMinute += parseFloat(min) + 'mins'
     }
     return StatusMinute
   }
+}
+
+// 将树状的数组转换为一维数组
+export function flatten(array) {
+  return [].concat(...array.map(item => [].concat(item, ...flatten(item.subitems))))
 }

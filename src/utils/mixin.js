@@ -15,10 +15,16 @@ export const ebookMixin = {
       'defaultTheme',
       'progress',
       'bookAvailable',
-      'section'
+      'section',
+      'cover',
+      'metadata',
+      'navigation'
       ]),
       themeList() {
         return themeList(this)
+      },
+      getSectionName() {
+        return this.section ? this.navigation[this.section].label : ''
       }
   },
   methods: {
@@ -33,7 +39,10 @@ export const ebookMixin = {
       'setDefaultTheme',
       'setProgress',
       'setBookAvailable',
-      'setSection'
+      'setSection',
+      'setCover',
+      'setMetadata',
+      'setNavigation'
     ]),
     // 初始化全局样式：添加 本地存储的主题设置 对应的样式表
     initGlobalStyle() {
@@ -60,14 +69,16 @@ export const ebookMixin = {
     // 并根据进度刷新 vuex 中 progress和section的值
     // 最后将当前进度的 startCfi 保存在本地里
     refreshLocation() {
-      // currentLocation() 得到一个对象，该对象下面有两个对象：start和end
-      // start：本页开始时的定位  end：本页结束时的定位
       const currentLocation = this.currentBook.rendition.currentLocation()
-      const startCfi = currentLocation.start.cfi
-      const progress = this.currentBook.locations.percentageFromCfi(startCfi)
-      this.setProgress(Math.floor(progress * 100))
-      this.setSection(currentLocation.start.index)
-      saveLocation(this.fileName, startCfi)
+      if (currentLocation && currentLocation.start) {
+        // currentLocation() 得到一个对象，该对象下面有两个对象：start和end
+        // start：本页开始时的定位  end：本页结束时的定位
+        const startCfi = currentLocation.start.cfi
+        const progress = this.currentBook.locations.percentageFromCfi(startCfi)
+        this.setProgress(Math.floor(progress * 100))
+        this.setSection(currentLocation.start.index)
+        saveLocation(this.fileName, startCfi)
+      }
     },
     // 传入当前进度→渲染页面→调用refreshLocation()
     // target 进度值 如startCfi
@@ -96,6 +107,12 @@ export const ebookMixin = {
         const readTime = getReadTime()
         return this.$t('book.haveRead').replace('$1', getReadTimeByMinute(readTime))
       }
+    },
+    // 隐藏所有栏目
+    hideTitleAndMenu() {
+      this.setMenuVisible(false)
+      this.setSettingVisible(-1)
+      this.setFontFamilyVisible(false)
     }
   }
 }

@@ -7,6 +7,7 @@
 <script>
   import { ebookMixin } from '../../utils/mixin'
   import { getFontFamily, saveFontFamily, getFontSize, saveFontSize, getTheme, saveTheme, getLocation } from '../../utils/localStorage'
+  import { flatten } from '../../utils/book'
 
   import Epub from 'epubjs'
   global.ePub = Epub
@@ -41,12 +42,6 @@
           this.setFontFamilyVisible(false)
         }
         this.setMenuVisible(!this.menuVisible)
-      },
-      // 隐藏所有栏目
-      hideTitleAndMenu() {
-        this.setMenuVisible(false)
-        this.setSettingVisible(-1)
-        this.setFontFamilyVisible(false)
       },
       // 初始化字体
       initFontFamily() {
@@ -142,6 +137,34 @@
           event.stopPropagation()
         })
       },
+      // 获取图书的基本信息
+      parseBook() {
+        // loaded：表示图书正在加载
+        // 获取图书封面
+        this.book.loaded.cover.then(cover => {
+          this.book.archive.createUrl(cover).then(url => {
+            this.setCover(url)
+          })
+        })
+        // 获取图书标题和作者等图书信息对象
+        this.book.loaded.metadata.then(metadata => {
+          this.setMetadata(metadata)
+        })
+        // 获取图书的目录
+        this.book.loaded.navigation.then(nav => {
+          const navItem = flatten(nav.toc)
+          // console.log('一维数组：' + navItem)
+          // 根据parent判断当前目录是几级目录 id:当前章节名
+          function find(item, level = 0) {
+            return !item.parent ? level : find(navItem.filter(parentItem => parentItem.id === item.parent)[0], ++level)
+          }
+          // 遍历循环 给每一个目录添加一个level值：表示这是第x级目录
+          navItem.forEach(item => {
+            item.level = find(item)
+          })
+          this.setNavigation(navItem)
+        })
+      },
       // 初始化电子书（在这里调用上面的方法）
       initEpub() {
         // 拼接静态服务器资源的位置+文件名字
@@ -151,8 +174,11 @@
         // 将实例化的book对象 传给公共变量 currentBook
         this.setCurrentBook(this.book)
 
-        this.initRendition()  // 图书渲染的初始化过程
-        this.initGesture()  // 初始化触摸手势
+        this.initRendition() // 图书渲染的初始化过程
+
+        this.parseBook() // 获取图书的基本信息
+
+        this.initGesture() // 初始化触摸手势
 
         // 钩子函数ready()：在book解析的过程全部结束后调用
         this.book.ready
@@ -169,7 +195,7 @@
     mounted() {
       // 根据地址栏的信息 拼取图书的链接后缀
       const fileName = this.$route.params.fileName.split('|').join('/')
-      // 将获取的链接后缀 保存到store中
+      // 将获取的图书链接后缀 保存到store中
       this.setFileName(fileName)
         .then(() => {
           this.initEpub()
