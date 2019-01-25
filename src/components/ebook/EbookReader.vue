@@ -1,6 +1,14 @@
 <template>
   <div class="ebook-reader">
     <div id="read"></div>
+    <div class="ebook-reader-mask"
+         @click="onMaskClick"
+         @touchmove="move"
+         @touchend="moveEnd"
+         @mousedown.left="onMouseEnter"
+         @mousemove.left="onMouseMove"
+         @mouseup.left="onMouseEnd">
+    </div>
   </div>
 </template>
 
@@ -15,6 +23,88 @@
   export default {
     mixins: [ebookMixin],
     methods: {
+      // 1 - 鼠标进入
+      // 2 - 鼠标进入后的移动
+      // 3 - 鼠标从移动状态松手
+      // 4 - 鼠标还原
+
+      // 鼠标从移动状态松手
+      onMouseEnd(e) {
+        if (this.mouseState === 2) {
+          this.setOffsetY(0)
+          this.firstOffsetY = null
+          this.mouseState = 3
+        } else {
+          this.mouseState = 4
+        }
+        const time = e.timeStamp - this.mouseStartTime
+        if (time < 100) {
+          this.mouseState = 4
+        }
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      // 鼠标进入后的移动
+      onMouseMove(e) {
+        if (this.mouseState === 1) {
+          this.mouseState = 2
+        } else if (this.mouseState === 2) {
+          let offsetY = 0
+          if (this.firstOffsetY) {
+            offsetY = e.clientY - this.firstOffsetY
+            this.setOffsetY(offsetY)
+          } else {
+            this.firstOffsetY = e.clientY
+          }
+        }
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      // 鼠标进入
+      onMouseEnter(e) {
+        this.mouseState = 1
+        this.mouseStartTime = e.timeStamp
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      // touchmove：触摸时触发的事件，计算Y轴上的偏移量并存储在vuex中 
+      move(e) {
+        let offsetY = 0
+        if (this.firstOffsetY) {
+          // changedTouches: 触发事件时改变的触摸点的集合
+          offsetY = e.changedTouches[0].clientY - this.firstOffsetY
+          this.setOffsetY(offsetY)
+        } else {
+          this.firstOffsetY = e.changedTouches[0].clientY
+        }
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      // touchend：触摸结束时触发的事件，将vuex中的偏移量和第一次的偏移值重置
+      moveEnd(e) {
+        this.setOffsetY(0)
+        this.firstOffsetY = null
+      },
+      // 蒙版点击事件
+      onMaskClick(e) {
+        // if (this.mouseState && (this.mouseState === 2 || this.mouseState === 3)) {
+        //   return
+        // }
+        // offsetX,offsetY  发生事件的地点在事件源元素（这里指的就是蒙版）的坐标系统中的 x 坐标和 y 坐标。
+        const offsetX = e.offsetX
+        const width = window.innerWidth
+        // 通过 offsetX 来判断不同区域事件的触发
+        // 左边区域
+        if (offsetX > 0 && offsetX < width * 0.3) {
+          this.prevPage()
+          // 右边区域
+        } else if (offsetX > 0 && offsetX > width * 0.7) {
+          this.nextPage()
+          // 中间区域
+        } else {
+          this.toggleTitleAndMenu()
+        }
+      },
       // 上一页
       prevPage() {
         if (this.rendition) {
@@ -205,5 +295,19 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-    @import "../../assets/styles/global";
+@import "../../assets/styles/global";
+.ebook-reader {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  .ebook-reader-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: transparent;
+    z-index: 150;
+    width: 100%;
+    height: 100%;
+  }
+}
 </style>

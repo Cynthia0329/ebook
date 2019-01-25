@@ -1,6 +1,6 @@
 import { mapGetters, mapActions } from 'vuex'
 import { themeList, addCss, removeAllCss, getReadTimeByMinute } from './book'
-import { saveLocation, getSingleReadTime, getReadTime } from './localStorage'
+import { saveLocation, getSingleReadTime, getReadTime, getBookmark } from './localStorage'
 
 export const ebookMixin = {
   computed: {
@@ -18,7 +18,9 @@ export const ebookMixin = {
       'section',
       'cover',
       'metadata',
-      'navigation'
+      'navigation',
+      'offsetY',
+      'isBookmark'
       ]),
       themeList() {
         return themeList(this)
@@ -42,7 +44,9 @@ export const ebookMixin = {
       'setSection',
       'setCover',
       'setMetadata',
-      'setNavigation'
+      'setNavigation',
+      'setOffsetY',
+      'setIsBookmark'
     ]),
     // 初始化全局样式：添加 本地存储的主题设置 对应的样式表
     initGlobalStyle() {
@@ -78,6 +82,17 @@ export const ebookMixin = {
         this.setProgress(Math.floor(progress * 100))
         this.setSection(currentLocation.start.index)
         saveLocation(this.fileName, startCfi)
+        // 判断当前页是否是书签页
+        const bookmark = getBookmark(this.fileName)
+        if (bookmark) {
+          if (bookmark.some(item => item.cfi === startCfi)) {
+            this.setIsBookmark(true)
+          } else {
+            this.setIsBookmark(false)
+          }
+        } else {
+          this.setIsBookmark(false)
+        }
       }
     },
     // 传入当前进度→渲染页面→调用refreshLocation()

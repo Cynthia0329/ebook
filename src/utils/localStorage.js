@@ -97,6 +97,15 @@ export function saveSingleReadTime(fileName, time) {
   setBookObject(fileName, 'singleReadTime', time)
 }
 
+// 书签的离线存储
+export function getBookmark(fileName) {
+  return getBookObject(fileName, 'bookmark')
+}
+
+export function saveBookmark(fileName, bookmark) {
+  setBookObject(fileName, 'bookmark', bookmark)
+}
+
 // ⭐全局的本地存储
 
 // 总阅读时长的离线存储

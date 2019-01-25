@@ -38,8 +38,8 @@
           { value: 16 },
           { value: 16 }
         ],
-        add: true,  // 表示线条长度需要添加
-        end: false  // 表示线条长度到上限了
+        add: true, // 表示线条长度需要添加
+        end: false // 表示线条长度到上限了
       }
     },
     mounted() {
