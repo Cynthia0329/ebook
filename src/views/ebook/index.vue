@@ -1,9 +1,11 @@
 <template>
   <div class="ebook" ref="ebook">
+    <ebook-header></ebook-header>
     <ebook-title></ebook-title>
     <ebook-reader></ebook-reader>
     <ebook-menu></ebook-menu>
     <ebook-bookmark></ebook-bookmark>
+    <ebook-footer></ebook-footer>
   </div>
 </template>
 
@@ -12,6 +14,9 @@
   import EbookTitle from '../../components/ebook/EbookTitle'
   import EbookMenu from '../../components/ebook/EbookMenu'
   import EbookBookmark from '../../components/ebook/EbookBookmark'
+  import EbookHeader from '../../components/ebook/EbookHeader'
+  import EbookFooter from '../../components/ebook/EbookFooter'
+
 
   import { ebookMixin } from '../../utils/mixin'
   import { getReadTime, saveReadTime, getSingleReadTime, saveSingleReadTime } from '../../utils/localStorage'
@@ -23,7 +28,9 @@
         EbookReader,
         EbookTitle,
         EbookMenu,
-        EbookBookmark
+        EbookBookmark,
+        EbookHeader,
+        EbookFooter
     },
     // watch 监听offsetY的值的改变，然后跟随它改变组件的top值
     // （当标题栏和菜单栏存在 或者 书籍未加载完成 的时候无法下拉）

@@ -46,6 +46,9 @@ const actions = {
   },
   setIsBookmark: ({ commit }, isBookmark) => {
     return commit('SET_IS_BOOKMARK', isBookmark)
+  },
+  setPaginate: ({ commit }, paginate) => {
+    return commit('SET_PAGINATE', paginate)
   }
 }
 

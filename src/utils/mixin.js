@@ -20,7 +20,8 @@ export const ebookMixin = {
       'metadata',
       'navigation',
       'offsetY',
-      'isBookmark'
+      'isBookmark',
+      'paginate'
       ]),
       themeList() {
         return themeList(this)
@@ -46,7 +47,8 @@ export const ebookMixin = {
       'setMetadata',
       'setNavigation',
       'setOffsetY',
-      'setIsBookmark'
+      'setIsBookmark',
+      'setPaginate'
     ]),
     // 初始化全局样式：添加 本地存储的主题设置 对应的样式表
     initGlobalStyle() {
