@@ -23,10 +23,15 @@
   export default {
     mixins: [ebookMixin],
     methods: {
+
+      // 这四个是适配pc端的鼠标左键事件 @mousedown.left（用以下状态来判断是否是在点击左键的情况下）
+      // 使书签下拉支持鼠标事件
       // 1 - 鼠标进入
       // 2 - 鼠标进入后的移动
       // 3 - 鼠标从移动状态松手
       // 4 - 鼠标还原
+
+      // 如果状态为2、3，就在onclick中无返回
 
       // 鼠标从移动状态松手
       onMouseEnd(e) {
@@ -37,6 +42,8 @@
         } else {
           this.mouseState = 4
         }
+        // 如果点击的时间过短，则判断只是一个普通的点击事件
+        // （为了防止在手抖的情况下点击屏幕无事件响应）
         const time = e.timeStamp - this.mouseStartTime
         if (time < 100) {
           this.mouseState = 4
@@ -48,6 +55,7 @@
       onMouseMove(e) {
         if (this.mouseState === 1) {
           this.mouseState = 2
+          console.log('鼠标点击移动')
         } else if (this.mouseState === 2) {
           let offsetY = 0
           if (this.firstOffsetY) {
@@ -63,10 +71,12 @@
       // 鼠标进入
       onMouseEnter(e) {
         this.mouseState = 1
-        this.mouseStartTime = e.timeStamp
+        this.mouseStartTime = e.timeStamp // 获取鼠标点击的时间
         e.preventDefault()
         e.stopPropagation()
       },
+
+      // 这两个是适配移动端的触摸事件
       // touchmove：触摸时触发的事件，计算Y轴上的偏移量并存储在vuex中 
       move(e) {
         let offsetY = 0
@@ -85,11 +95,13 @@
         this.setOffsetY(0)
         this.firstOffsetY = null
       },
+
       // 蒙版点击事件
       onMaskClick(e) {
-        // if (this.mouseState && (this.mouseState === 2 || this.mouseState === 3)) {
-        //   return
-        // }
+        // 这里是适配pc端的 2-3状态的处理
+        if (this.mouseState && (this.mouseState === 2 || this.mouseState === 3)) {
+          return
+        }
         // offsetX,offsetY  发生事件的地点在事件源元素（这里指的就是蒙版）的坐标系统中的 x 坐标和 y 坐标。
         const offsetX = e.offsetX
         const width = window.innerWidth
@@ -173,7 +185,7 @@
         // 渲染book对象
         this.rendition = this.book.renderTo('read', {
           width: innerWidth,
-          height: innerHeight
+          height: innerHeight,
           // method: 'default' // 微信浏览的兼容性配置
         })
         // 获取本地存储的进度，并将渲染的结果展示在页面上

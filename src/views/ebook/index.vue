@@ -17,10 +17,8 @@
   import EbookHeader from '../../components/ebook/EbookHeader'
   import EbookFooter from '../../components/ebook/EbookFooter'
 
-
   import { ebookMixin } from '../../utils/mixin'
   import { getReadTime, saveReadTime, getSingleReadTime, saveSingleReadTime } from '../../utils/localStorage'
-  // import { setInterval } from 'timers'
 
   export default {
     mixins: [ebookMixin],

@@ -26,7 +26,7 @@
           <span class="slide-contents-book-title-text">{{ metadata.title }}</span>
         </div>
         <div class="slide-contents-book-author">
-          <span class="slide-contents-book-author-text">{{ metadata.author }}</span>
+          <span class="slide-contents-book-author-text">{{ metadata.creator }}</span>
         </div>
       </div>
       <div class="slide-contents-book-progress-wrapper">
@@ -128,6 +128,9 @@
             marginLeft: `${px2rem(item.level * 15)}rem`
           }
       },
+    },
+    mounted() {
+      // 测试
     }
   }
 </script>
