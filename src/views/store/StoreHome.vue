@@ -1,51 +1,13 @@
 <template>
   <div class="store-home">
     <search-bar></search-bar>
-    <!-- <flap-card></flap-card> -->
+    <!-- <flap-card :data="random"></flap-card> -->
     <scroll :top="scrollTop" @onScroll="onScroll" ref="scroll">
-      <!-- <div class="banner-wrapper">
-        <div class="banner-img"></div>
+      <div class="banner-wrapper">
+        <div class="banner-img" :style="{backgroundImage:`url('${banner}')`}"></div>
       </div>
-      <guess-you-like></guess-you-like>
-      <recommend></recommend>
-      <featured class="featured"></featured>
-      <div class="category-list-wrapper">
-        <category-book></category-book>
-      </div>
-      <category class="categories"></category> -->
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
-      <p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>
+      <guess-you-like :data="guessYouLike"></guess-you-like>
+      <category class="categories" :data="categories"></category>
     </scroll>
   </div>
 </template>
@@ -55,21 +17,15 @@
   import Scroll from '../../components/common/Scroll'
   // import FlapCard from '../../components/home/FlapCard'
   import { storeHomeMixin } from '../../utils/mixin'
-  // import { home } from '../../api/store'
-  // import GuessYouLike from '../../components/home/GuessYouLike'
-  // import Recommend from '../../components/home/Recommend'
-  // import Featured from '../../components/home/Featured'
-  // import CategoryBook from '../../components/home/CategoryBook'
-  // import Category from '../../components/home/Category'
+  import { home } from '../../api/store'
+  import GuessYouLike from '../../components/home/GuessYouLike'
+  import Category from '../../components/home/Category'
 
   export default {
     mixins: [storeHomeMixin],
     components: {
-      // Category,
-      // CategoryBook,
-      // Featured,
-      // Recommend,
-      // GuessYouLike,
+      Category,
+      GuessYouLike,
       SearchBar,
       Scroll,
       // FlapCard
@@ -80,14 +36,11 @@
         random: null,
         banner: '',
         guessYouLike: null,
-        recommend: null,
-        featured: null,
-        categoryList: null,
         categories: null
       }
     },
     methods: {
-      // 设置offsetY的值
+      // 获取并设置offsetY的值，动态改变子组件scroll的top值
       onScroll(offsetY) {
         // offsetY：子组件scroll调用本父组件的onScroll()方法，传递过来的值
         // 该值的意思是：当屏幕产生滑动的时候，Y轴的偏移量
@@ -101,7 +54,18 @@
       }
     },
     mounted() {
-      
+      home().then(response => {
+        if (response && response.status === 200) {
+          const data = response.data
+          // 生成随机数，将这个随机数传给flapcard组件生成随机的图书（暂未做）
+          const randomIndex = Math.floor(Math.random() * data.random.length)
+          this.random = data.random[randomIndex]
+
+          this.banner = data.banner
+          this.guessYouLike = data.guessYouLike
+          this.categories = data.categories
+        }
+      })
     }
   }
 </script>
@@ -122,15 +86,6 @@
         background-repeat: no-repeat;
         background-size: 100% 100%;
       }
-    }
-    .recommend {
-      margin-top: px2rem(20);
-    }
-    .featured {
-      margin-top: px2rem(20);
-    }
-    .category-list-wrapper {
-      margin-top: px2rem(20);
     }
     .categories {
       margin-top: px2rem(20);
