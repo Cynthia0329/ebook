@@ -26,10 +26,12 @@
     },
     methods: {
       // 捕捉滚动事件处理函数
+      // 捕捉当屏幕产生滑动的时候，Y轴的偏移量
       handleScroll(e) {
         const offsetY = e.target.scrollTop || window.pageYOffset || document.body.scrollTop
         this.$emit('onScroll', offsetY)
       },
+      // 整个内容滚动的位置
       scrollTo(x, y) {
         this.$refs.scrollWrapper.scrollTo(x, y)
       },

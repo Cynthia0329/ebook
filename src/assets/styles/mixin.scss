@@ -1,27 +1,50 @@
 $ratio: 375 / 10;
+$animationTime: .2s;
+$animationType: linear;
 
 @function px2rem($px) {
   @return $px / $ratio + rem;
 }
 
-// 使子元素居中显示
+// 使flex布局的子元素居中显示
 @mixin center {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-// 使子元素居左显示
+// 使flex布局的子元素 水平居左显示
 @mixin left {
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
-
-// 使子元素居由显示
+// 使flex布局的子元素 水平居右显示
 @mixin right {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+}
+
+// 使flex布局的子元素 垂直居？？显示
+@mixin columnTop {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+// 使flex布局的子元素 垂直居左显示
+@mixin columnLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+// 使flex布局的子元素 垂直居中显示
+@mixin columnCenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
 }
 
@@ -41,4 +64,16 @@ $ratio: 375 / 10;
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: keep-all;
+}
+
+// 图标和标题的默认样式
+.icon {
+  color: #666;
+  font-size: px2rem(16);
+}
+
+.title {
+  color: #666;
+  font-size: px2rem(16);
+  font-weight: bold;
 }

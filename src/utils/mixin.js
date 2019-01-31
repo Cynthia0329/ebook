@@ -2,6 +2,7 @@ import { mapGetters, mapActions } from 'vuex'
 import { themeList, addCss, removeAllCss, getReadTimeByMinute } from './book'
 import { saveLocation, getSingleReadTime, getReadTime, getBookmark } from './localStorage'
 
+// 阅读器相关的公用数据和方法
 export const ebookMixin = {
   computed: {
     ...mapGetters([
@@ -130,6 +131,27 @@ export const ebookMixin = {
       this.setMenuVisible(false)
       this.setSettingVisible(-1)
       this.setFontFamilyVisible(false)
+    }
+  }
+}
+
+// 书城首页相关的公用数据和方法
+export const storeHomeMixin = {
+  computed: {
+    ...mapGetters([
+      'offsetY',
+      // 'hotSearchOffsetY',
+      // 'flapCardVisible'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'setOffsetY',
+      // 'setHotSearchOffsetY',
+      // 'setFlapCardVisible'
+    ]),
+    showBookDetail(book) {
+      // gotoBookDetail(this, book)
     }
   }
 }

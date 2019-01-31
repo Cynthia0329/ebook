@@ -6,7 +6,7 @@
     transform: translate3d(0, 0, 0)
   }
   // 所有过渡动画的时间和样式
-  .slide-down-enter-active, .slide-down-leave-active, .slide-up-enter-active, .slide-up-leave-active, .fade-enter-active, .fade-leave-active, .slide-right-enter-active, .slide-right-leave-active,.popup-slide-up-enter-active, .popup-slide-up-leave-active {
+  .slide-down-enter-active, .slide-down-leave-active, .slide-up-enter-active, .slide-up-leave-active, .fade-enter-active, .fade-leave-active, .slide-right-enter-active, .slide-right-leave-active,.popup-slide-up-enter-active, .popup-slide-up-leave-active, .title-move-enter-active, .title-move-leave-active {
     transition: all .3s linear;
   }
   .slide-up-enter, .slide-up-leave-to {
@@ -29,7 +29,13 @@
     opacity: 0;
   }
   // 公共的原点位置
-  .popup-slide-up-enter-to, .popup-slide-up-leave, .fade-slide-right-enter-to, .fade-slide-right-leave, {
+  .popup-slide-up-enter-to, .popup-slide-up-leave, .fade-slide-right-enter-to, .fade-slide-right-leave, .title-move-enter-to, .title-move-leave{
     transform: translate3d(0,0,0);
     opacity: 1;
+  }
+
+  // 书城首页标题搜索栏的过渡动画
+  .title-move-enter, .title-move-leave-to {
+    transform: translate3d(0, px2rem(10), 0);
+    opacity: 0;
   }
