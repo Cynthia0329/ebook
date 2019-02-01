@@ -1,23 +1,31 @@
 // import { getLocalStorage, getBookShelf, saveBookShelf } from './localStorage'
+import { getBookShelf, saveBookShelf } from './localStorage'
 
-// export function addToShelf(book) {
-//   let shelfList = getBookShelf()
-//   shelfList = removeAddFromShelf(shelfList)
-//   book.type = 1
-//   shelfList.push(book)
-//   shelfList = computeId(shelfList)
-//   shelfList = appendAddToShelf(shelfList)
-//   saveBookShelf(shelfList)
-// }
+// 添加图书到书架中
+export function addToShelf(book) {
+  // 从本地中读取书架中的图书列表（包含默认和分类中的所有图书）
+  let shelfList = getBookShelf()
+  shelfList = removeAddFromShelf(shelfList)
+  // 设置新添加的图书为默认图书
+  book.type = 1
+  shelfList.push(book)
+  // ？？？
+  shelfList = computeId(shelfList)
+  // 将...添加到书架上
+  shelfList = appendAddToShelf(shelfList)
+  // 重新保存本地中的shelfList数组
+  saveBookShelf(shelfList)
+}
 
-// export function removeFromBookShelf(book) {
-//   return getBookShelf().filter(item => {
-//     if (item.itemList) {
-//       item.itemList = removeAddFromShelf(item.itemList)
-//     }
-//     return item.fileName !== book.fileName
-//   })
-// }
+// 将图书从书架移除
+export function removeFromBookShelf(book) {
+  return getBookShelf().filter(item => {
+    if (item.itemList) { // ???
+      item.itemList = removeAddFromShelf(item.itemList)
+    }
+    return item.fileName !== book.fileName
+  })
+}
 
 // export function flatBookList(bookList) {
 //   if (bookList) {
@@ -52,17 +60,18 @@
 //   return flatBookList(bookList).find(item => item.fileName === fileName)
 // }
 
-// export function computeId(list) {
-//   return list.map((book, index) => {
-//     if (book.type !== 3) {
-//       book.id = index + 1
-//       if (book.itemList) {
-//         book.itemList = computeId(book.itemList)
-//       }
-//     }
-//     return book
-//   })
-// }
+// ？？？
+export function computeId(list) {
+  return list.map((book, index) => {
+    if (book.type !== 3) {
+      book.id = index + 1
+      if (book.itemList) {
+        book.itemList = computeId(book.itemList)
+      }
+    }
+    return book
+  })
+}
 
 // 进入书籍详情页的方法
 export function gotoBookDetail(vue, book) {
@@ -81,18 +90,22 @@ export function gotoBookDetail(vue, book) {
 //   })
 // }
 
-// 添加书籍到书架上
-// export function appendAddToShelf(list) {
-//   list.push({
-//     id: -1,
-//     type: 3
-//   })
-//   return list
-// }
+// ？？？
+export function appendAddToShelf(list) {
+  list.push({
+    id: -1,
+    type: 3
+  })
+  return list
+}
 
-// export function removeAddFromShelf(list) {
-//   return list.filter(item => item.type !== 3)
-// }
+// 过滤图书列表，得到书架上默认和分组中的所有图书
+export function removeAddFromShelf(list) {
+  if (!list) {
+    return []
+  }
+  return list.filter(item => item.type !== 3)
+}
 
 // export const flapCardList = [
 //   {

@@ -18,7 +18,8 @@ const book = {
   paginate: state => state.book.paginate,
   isEditMode: state => state.store.isEditMode,
   shelfSelected: state => state.store.shelfSelected,
-  shelfTitleVisible: state => state.store.shelfTitleVisible
+  shelfTitleVisible: state => state.store.shelfTitleVisible,
+  shelfList: state => state.store.shelfList
 }
 
 export default book

@@ -2,7 +2,7 @@ const store = {
   state: {
     // flapCardVisible: false,
     isEditMode: false,
-    // shelfList: [],
+    shelfList: [],
     shelfSelected: [],
     shelfTitleVisible: true,
     // shelfCategory: [], // 书架分类列表数据
@@ -15,9 +15,9 @@ const store = {
     SET_IS_EDIT_MODE(state, isEditMode) {
       state.isEditMode = isEditMode
     },
-    // SET_SHELF_LIST(state, list) {
-    //   state.shelfList = list
-    // },
+    SET_SHELF_LIST(state, list) {
+      state.shelfList = list
+    },
     SET_SHELF_SELECTED(state, shelfSelected) {
       state.shelfSelected = shelfSelected
     },

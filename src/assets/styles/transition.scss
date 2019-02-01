@@ -1,4 +1,6 @@
-  // 标题栏和菜单栏的过渡动画
+@import "./mixin";
+
+// 标题栏和菜单栏的过渡动画
   .slide-down-enter, .slide-down-leave-to {
     transform: translate3d(0, -100%, 0)
   }

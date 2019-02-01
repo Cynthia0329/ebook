@@ -1,19 +1,23 @@
 <template>
   <div class="book-detail">
+    <!-- 顶层标题栏 -->
     <detail-title @back="back"
                   :showShelf="true"
-                  ref="title"></detail-title>
+                  ref="title">
+    </detail-title>
+    <!-- 图书内容部分 -->
     <scroll class="content-wrapper"
             :top="42"
             :bottom="52"
             @onScroll="onScroll"
             ref="scroll">
+      <!-- 图书基本信息 -->
       <book-info :cover="cover"
                  :title="title"
                  :author="author"
                  :desc="desc">
       </book-info>
-      <!-- 版权 -->
+      <!-- 图书版权信息 -->
       <div class="book-detail-content-wrapper">
         <div class="book-detail-content-title">{{$t('detail.copyright')}}</div>
         <div class="book-detail-content-list-wrapper">
@@ -65,12 +69,12 @@
         <div id="preview" v-show="this.displayed" ref="preview"></div>
       </div>
     </scroll>
+    <!-- 底层按钮栏 -->
     <div class="bottom-wrapper">
       <div class="bottom-btn" @click.stop.prevent="readBook()">{{$t('detail.read')}}</div>
       <div class="bottom-btn" @click.stop.prevent="trialListening()">{{$t('detail.listen')}}</div>
       <div class="bottom-btn" @click.stop.prevent="addOrRemoveShelf()">
-        <span class="icon-check" v-if="inBookShelf"></span>
-        {{inBookShelf ? $t('detail.isAddedToShelf') : $t('detail.addOrRemoveShelf')}}
+        {{ !inBookShelf ? $t('detail.addShelf') : $t('detail.RemoveShelf') }}
       </div>
     </div>
     <toast :text="toastText" ref="toast"></toast>
@@ -84,11 +88,16 @@
   import Toast from '../../components/common/Toast'
   import { detail } from '../../api/store'
   import { px2rem, realPx } from '../../utils/utils'
+  // import { getLocalForage } from '../../utils/localForage'
+  import { removeFromBookShelf, addToShelf } from '../../utils/store'
+  import { storeShelfMixin } from '../../utils/mixin'
+  import { getBookShelf, saveBookShelf } from '../../utils/localStorage'
   import Epub from 'epubjs'
 
   global.ePub = Epub
 
   export default {
+    mixins: [storeShelfMixin],
     components: {
       DetailTitle,
       Scroll,
@@ -125,11 +134,12 @@
       author() {
         return this.metadata ? this.metadata.creator : ''
       },
+      // 判断书架中是否存在该图书，返回一个布尔值
       inBookShelf() {
-        if (this.bookItem && this.bookShelf) {
+        if (this.bookItem && this.shelfList) {
           const flatShelf = (function flatten(arr) {
             return [].concat(...arr.map(v => v.itemList ? [v, ...flatten(v.itemList)] : v))
-          })(this.bookShelf).filter(item => item.type === 1)
+          })(this.shelfList).filter(item => item.type === 1)
           const book = flatShelf.filter(item => item.fileName === this.bookItem.fileName)
           return book && book.length > 0
         } else {
@@ -156,7 +166,18 @@
       }
     },
     methods: {
+      // 添加或者移除图书到书架
       addOrRemoveShelf() {
+        if (this.inBookShelf) { // 书架中存在，则调用移除的方法
+          this.setShelfList(removeFromBookShelf(this.bookItem)).then(() => {
+            // 移除之后，保存新的数组到本地的shelfList
+            saveBookShelf(this.shelfList)
+          })
+        } else {  // 书架中不存在，则调用添加的方法
+          addToShelf(this.bookItem)
+          // 从本地中读取新的shelfList，重新设置vuex的值
+          this.setShelfList(getBookShelf())
+        }
       },
       showToast(text) {
         this.toastText = text
@@ -164,10 +185,28 @@
       },
       readBook() {
         this.$router.push({
-          path: `/ebook/${this.categoryText}|${this.fileName}`
+          path: `/ebook/${this.bookItem.categoryText}|${this.fileName}`
         })
       },
       trialListening() {
+        getLocalForage(this.bookItem.fileName, (err, blob) => {
+          if (!err && blob && blob instanceof Blob) {
+            this.$router.push({
+              path: '/store/speaking',
+              query: {
+                fileName: this.bookItem.fileName
+              }
+            })
+          } else {
+            this.$router.push({
+              path: '/store/speaking',
+              query: {
+                fileName: this.bookItem.fileName,
+                opf: this.opf
+              }
+            })
+          }
+        })
       },
       read(item) {
         this.$router.push({
@@ -194,12 +233,15 @@
         const opf = `${process.env.VUE_APP_EPUB_URL}/${this.bookItem.categoryText}/${this.bookItem.fileName}/OEBPS/package.opf`
         this.parseBook(opf)
       },
-      // 根据传入的opf路径解析电子书
+      // 根据opf请求解析图书内容
       parseBook(url) {
+        // 得到book对象
         this.book = new Epub(url)
+        // book的基本信息对象metadata
         this.book.loaded.metadata.then(metadata => {
           this.metadata = metadata
         })
+        // book的目录信息对象
         this.book.loaded.navigation.then(nav => {
           this.navigation = nav
           if (this.navigation.toc && this.navigation.toc.length > 1) {
@@ -218,22 +260,23 @@
           }
         })
       },
-      // 进入初始化页面，从接口从获取书籍详情页的相关数据
+      // 从api接口获取图书相关的数据
       init() {
-        // 从路由从获取图书名字和分类id
+        // 图书的名字和分类
         this.fileName = this.$route.query.fileName
         this.categoryText = this.$route.query.category
-        // 如果图书名字存在，则调用接口方法获取bookItem对象
+        // 传入图书名字，获取图书数据
         if (this.fileName) {
           detail({
             fileName: this.fileName
           }).then(response => {
             if (response.status === 200 && response.data.error_code === 0 && response.data.data) {
               const data = response.data.data
+              // bookItem对象
               this.bookItem = data
               this.cover = this.bookItem.cover
+              // 拼接图书的opf请求路径
               let rootFile = data.rootFile
-              // 拼接opf请求路径
               if (rootFile.startsWith('/')) {
                 rootFile = rootFile.substring(1, rootFile.length)
               }
@@ -273,7 +316,12 @@
       }
     },
     mounted() {
+      // 初始化,从api接口获取图书相关的数据
       this.init()
+      // 如果vuex中不存在shelfList，则先从本地中获取
+      if (!this.shelfList || this.shelfList.length === 0) {
+        this.getShelfList()
+      }
     }
   }
 </script>

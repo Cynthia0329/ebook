@@ -1,10 +1,9 @@
 import { mapGetters, mapActions } from 'vuex'
 import { themeList, addCss, removeAllCss, getReadTimeByMinute } from './book'
-import { gotoBookDetail } from './store'
+import { gotoBookDetail, appendAddToShelf } from './store'
 // import { gotoBookDetail, appendAddToShelf, computeId, removeAddFromShelf } from './store'
-// import { shelf } from '../api/store'
-// import { saveLocation, getSingleReadTime, getReadTime, getBookmark, getBookShelf, saveBookShelf } from './localStorage'
-import { saveLocation, getSingleReadTime, getReadTime, getBookmark } from './localStorage'
+import { shelf } from '../api/store'
+import { saveLocation, getSingleReadTime, getReadTime, getBookmark, getBookShelf, saveBookShelf } from './localStorage'
 
 // 阅读器相关的公用数据和方法
 export const ebookMixin = {
@@ -165,10 +164,10 @@ export const storeShelfMixin = {
   computed: {
     ...mapGetters([
       'isEditMode',
-      // 'shelfList',
+      'shelfList',
       'shelfSelected',
       'shelfTitleVisible',
-      // 'offsetY',
+      'offsetY',
       // 'shelfCategory',
       // 'currentType'
     ])
@@ -176,10 +175,10 @@ export const storeShelfMixin = {
   methods: {
     ...mapActions([
       'setIsEditMode',
-      // 'setShelfList',
+      'setShelfList',
       'setShelfSelected',
       'setShelfTitleVisible',
-      // 'setOffsetY',
+      'setOffsetY',
       // 'setShelfCategory',
       // 'setCurrentType'
     ]),
@@ -193,20 +192,22 @@ export const storeShelfMixin = {
     //   })
     // },
 
-    // getShelfList() {
-    //   let shelfList = getBookShelf()
-    //   if (!shelfList) {
-    //     shelf().then(response => {
-    //       if (response.status === 200 && response.data && response.data.bookList) {
-    //         shelfList = appendAddToShelf(response.data.bookList)
-    //         saveBookShelf(shelfList)
-    //         return this.setShelfList(shelfList)
-    //       }
-    //     })
-    //   } else {
-    //     return this.setShelfList(shelfList)
-    //   }
-    // },
+    // 得到书架列表
+    getShelfList() {
+      let shelfList = getBookShelf()
+      if (!shelfList) {
+        shelf().then(response => {
+          if (response.status === 200 && response.data && response.data.bookList) {
+            shelfList = appendAddToShelf(response.data.bookList)
+            saveBookShelf(shelfList)
+            return this.setShelfList(shelfList)
+          }
+        })
+      } else {
+        return this.setShelfList(shelfList)
+      }
+    },
+
     // moveOutOfGroup(f) {
     //   this.setShelfList(this.shelfList.map(book => {
     //     if (book.type === 2 && book.itemList) {

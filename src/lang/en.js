@@ -109,8 +109,8 @@ const messages = {
     loading: 'Loading...',
     read: 'Read',
     listen: 'Listen',
-    addOrRemoveShelf: 'Add to Book Shelf',
-    isAddedToShelf: 'Added to BookShelf'
+    addShelf: 'Add to Book Shelf',
+    RemoveShelf: 'Remove from Shelf'
   },
   speak: {
     voice: 'Voice Reading',
