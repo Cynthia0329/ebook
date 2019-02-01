@@ -64,15 +64,16 @@
 //   })
 // }
 
-// export function gotoBookDetail(vue, book) {
-//   vue.$router.push({
-//     path: '/store/detail',
-//     query: {
-//       fileName: book.fileName,
-//       category: book.categoryText
-//     }
-//   })
-// }
+// 进入书籍详情页的方法
+export function gotoBookDetail(vue, book) {
+  vue.$router.push({
+    path: '/store/detail',
+    query: {
+      fileName: book.fileName,
+      category: book.categoryText
+    }
+  })
+}
 
 // export function gotoStoreHome(vue) {
 //   vue.$router.push({
@@ -150,32 +151,33 @@
 //   }
 // ]
 
-// export const categoryList = {
-//   'ComputerScience': 1,
-//   'SocialSciences': 2,
-//   'Economics': 3,
-//   'Education': 4,
-//   'Engineering': 5,
-//   'Environment': 6,
-//   'Geography': 7,
-//   'History': 8,
-//   'Laws': 9,
-//   'LifeSciences': 10,
-//   'Literature': 11,
-//   'Biomedicine': 12,
-//   'BusinessandManagement': 13,
-//   'EarthSciences': 14,
-//   'MaterialsScience': 15,
-//   'Mathematics': 16,
-//   'MedicineAndPublicHealth': 17,
-//   'Philosophy': 18,
-//   'Physics': 19,
-//   'PoliticalScienceAndInternationalRelations': 20,
-//   'Psychology': 21,
-//   'Statistics': 22
-// }
+// 图书分类的名字列表
+export const categoryList = {
+  'ComputerScience': 1,
+  'SocialSciences': 2,
+  'Economics': 3,
+  'Education': 4,
+  'Engineering': 5,
+  'Environment': 6,
+  'Geography': 7,
+  'History': 8,
+  'Laws': 9,
+  'LifeSciences': 10,
+  'Literature': 11,
+  'Biomedicine': 12,
+  'BusinessandManagement': 13,
+  'EarthSciences': 14,
+  'MaterialsScience': 15,
+  'Mathematics': 16,
+  'MedicineAndPublicHealth': 17,
+  'Philosophy': 18,
+  'Physics': 19,
+  'PoliticalScienceAndInternationalRelations': 20,
+  'Psychology': 21,
+  'Statistics': 22
+}
 
-// 得到图书分类的名字列表
+// 通过id号 得到图书分类的名字列表 方法
 export function getCategoryName(id) {
   switch (id) {
     case 1:

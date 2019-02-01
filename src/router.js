@@ -36,14 +36,14 @@ export default new Router({
           path: 'home',
           component: () => import('./views/store/StoreHome.vue')
         },
-        // { // 书城列表页
-        //   path: 'list',
-        //   component: () => import('./views/store/StoreList.vue')
-        // },
-        // { // 详情页
-        //   path: 'detail',
-        //   component: () => import('./views/store/StoreDetail.vue')
-        // },
+        { // 书城列表页
+          path: 'list',
+          component: () => import('./views/store/StoreList.vue')
+        },
+        { // 详情页
+          path: 'detail',
+          component: () => import('./views/store/StoreDetail.vue')
+        },
         // { // 语音页
         //   path: 'speaking',
         //   component: () => import('./views/store/StoreSpeaking.vue')

@@ -55,6 +55,15 @@
       },
     },
     methods: {
+      // 根据输入的关键字搜索信息
+      search() {
+        this.$router.push({
+          path: '/store/list',
+          query: {
+            keyword: this.searchText
+          }
+        })
+      },
       // 隐藏标题栏
        hideTitle() {
         this.titleVisible = false

@@ -33,6 +33,7 @@
       data: Array
     },
     methods: {
+      // 展示点击的分类列表
       showBookCategory(item) {
         this.$router.push({
           path: '/store/list',
@@ -45,6 +46,7 @@
       categoryText(category) {
         return categoryText(category, this)
       },
+      // 展示所有的分类列表
       showBookList() {
         this.$router.push('/store/list')
       }
