@@ -93,7 +93,7 @@
           this.hideShadow()
           this.showTitle()
         }
-          // this.$router.push('/store/shelf')
+          this.$router.push('/store/shelf')
       },
     }
   }

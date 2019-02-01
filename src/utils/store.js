@@ -81,6 +81,7 @@ export function gotoBookDetail(vue, book) {
 //   })
 // }
 
+// 添加书籍到书架上
 // export function appendAddToShelf(list) {
 //   list.push({
 //     id: -1,

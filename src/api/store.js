@@ -8,12 +8,13 @@ import axios from 'axios'
 //   })
 // }
 
-// export function shelf() {
-//   return axios({
-//     method: 'get',
-//     url: `${process.env.VUE_APP_BASE_URL}/book/shelf`
-//   })
-// }
+// 书架页面调用的api
+export function shelf() {
+  return axios({
+    method: 'get',
+    url: `${process.env.VUE_APP_BASE_URL}/book/shelf`
+  })
+}
 
 // 书城主页调用的api
 export function home() {

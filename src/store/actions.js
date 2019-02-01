@@ -49,6 +49,15 @@ const actions = {
   },
   setPaginate: ({ commit }, paginate) => {
     return commit('SET_PAGINATE', paginate)
+  },
+  setIsEditMode: ({ commit }, isEditMode) => {
+    return commit('SET_IS_EDIT_MODE', isEditMode)
+  },
+  setShelfSelected: ({ commit }, shelfSelected) => {
+    return commit('SET_SHELF_SELECTED', shelfSelected)
+  },
+  setShelfTitleVisible: ({ commit }, shelfTitleVisible) => {
+    return commit('SET_SHELF_TITLE_VISIBLE', shelfTitleVisible)
   }
 }
 

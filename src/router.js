@@ -7,7 +7,7 @@ export default new Router({
   routes: [
     { // 首页重定向设置
       path: '/',
-      redirect: '/store'
+      redirect: '/store/shelf'
     },
     { // 阅读器主组件
       path: '/ebook',
@@ -24,10 +24,10 @@ export default new Router({
       component: () => import('./views/store/index.vue'),
       redirect: '/store/home',
       children: [
-        // { // 书架页
-        //   path: 'shelf',
-        //   component: () => import('./views/store/StoreShelf.vue')
-        // },
+        { // 书架页
+          path: 'shelf',
+          component: () => import('./views/store/StoreShelf.vue')
+        },
         // { // 分类页
         //   path: 'category',
         //   component: () => import('./views/store/StoreCategory.vue')

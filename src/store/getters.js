@@ -15,7 +15,10 @@ const book = {
   navigation: state => state.book.navigation,
   offsetY: state => state.book.offsetY,
   isBookmark: state => state.book.isBookmark,
-  paginate: state => state.book.paginate
+  paginate: state => state.book.paginate,
+  isEditMode: state => state.store.isEditMode,
+  shelfSelected: state => state.store.shelfSelected,
+  shelfTitleVisible: state => state.store.shelfTitleVisible
 }
 
 export default book
