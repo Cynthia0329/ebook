@@ -1,8 +1,8 @@
 <template>
   <div class="shelf-item-book">
     <img class="shelf-item-book-cover" :src="data.cover">
-    <div class="private-wrapper" v-show="data.private"></div>
-    <div class="private-icon-wrapper" v-show="data.cache">
+    <div class="cache-wrapper" v-show="data.cache"></div>
+    <div class="cache-icon-wrapper" v-show="data.cache">
       <span class="icon-download"></span>
     </div>
   </div>
@@ -25,17 +25,17 @@
       width: 100%;
       height: 100%;
     }
-    .private-wrapper {
+    .cache-wrapper {
       position: absolute;
       left: 0;
       bottom: 0;
       width: 0;
       height: 0;
-      border-width: px2rem(15);
+      border-width: px2rem(18);
       border-style: solid;
       border-color: transparent transparent rgba(0, 0, 0, .3) rgba(0, 0, 0, .3);
     }
-    .private-icon-wrapper {
+    .cache-icon-wrapper {
       position: absolute;
       left: 0;
       bottom: 0;
@@ -44,8 +44,8 @@
       padding-bottom: px2rem(5);
       padding-left: px2rem(3);
       // @include leftBottom;
-      .icon-private {
-        font-size: px2rem(12);
+      .icon-download {
+        font-size: px2rem(14);
         color: white;
       }
     }

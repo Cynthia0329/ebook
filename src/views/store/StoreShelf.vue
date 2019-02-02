@@ -57,13 +57,7 @@
       }
     },
     mounted() {
-      // 得到接口中的模拟数据（前期测试用）
-      shelf().then(response => {
-        if (response && response.status === 200 && response.data.bookList) {
-          this.setShelfList(appendAddToShelf(response.data.bookList))
-        }
-      })
-      // this.getShelfList()
+      this.getShelfList() // 从本地获取书架列表状态信息数组，并更新vuex中的值
       // this.setShelfCategory([])
       // this.setCurrentType(1)
     }

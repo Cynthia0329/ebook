@@ -1,6 +1,6 @@
 <template>
-  <div class="menu-bar">
-    <div class="menu-wrapper hide-box-shadow">
+  <div class="footer-menu-bar">
+    <div class="footer-menu-wrapper hide-box-shadow">
       <div class="icon-wrapper"  @click="showBookShelf()" :class="{'selected': currentTab === 1}">
         <span class="icon-shelf"></span>
         <span class="menu-bar-font">书架</span>
@@ -40,12 +40,12 @@
 
 <style lang="scss" rel="stylesheet/scss" scoped>
 @import "../../assets/styles/global";
-.menu-bar {
-  .menu-wrapper {
+.footer-menu-bar {
+  .footer-menu-wrapper {
     position: absolute;
     bottom: 0;
     left: 0;
-    z-index: 202;       // 这个值要比中间遮罩层高才能防止菜单栏点击的时候消失
+    z-index: 300;
     display: flex;
     width: 100%;
     height: px2rem(54);

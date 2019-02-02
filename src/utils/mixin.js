@@ -2,7 +2,7 @@ import { mapGetters, mapActions } from 'vuex'
 import { themeList, addCss, removeAllCss, getReadTimeByMinute } from './book'
 import { gotoBookDetail, appendAddToShelf } from './store'
 // import { gotoBookDetail, appendAddToShelf, computeId, removeAddFromShelf } from './store'
-import { shelf } from '../api/store'
+// import { shelf } from '../api/store'
 import { saveLocation, getSingleReadTime, getReadTime, getBookmark, getBookShelf, saveBookShelf } from './localStorage'
 
 // 阅读器相关的公用数据和方法
@@ -195,17 +195,21 @@ export const storeShelfMixin = {
     //   })
     // },
 
-    // 得到书架列表数据：shelfList数组
+    // 从本地获取书架列表状态信息数组，并更新vuex中的值
     getShelfList() {
       let shelfList = getBookShelf()
-      if (!shelfList) {
-        shelf().then(response => {
-          if (response.status === 200 && response.data && response.data.bookList) {
-            shelfList = appendAddToShelf(response.data.bookList)
-            saveBookShelf(shelfList)
-            return this.setShelfList(shelfList)
-          }
-        })
+      if (!shelfList) { // 如果本地中不存在书架的数据
+        shelfList = appendAddToShelf([])
+        saveBookShelf(shelfList)
+        this.setShelfList(shelfList)
+        // 如果本地不存在，则读取mock模拟数据
+        // shelf().then(response => {
+        //   if (response.status === 200 && response.data && response.data.bookList) {
+        //     shelfList = appendAddToShelf(response.data.bookList)
+        //     saveBookShelf(shelfList)
+        //     return this.setShelfList(shelfList)
+        //   }
+        // })
       } else {
         return this.setShelfList(shelfList)
       }

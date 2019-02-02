@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import { setLocalForage } from '../utils/localForage' 
+import { setLocalForage } from '../utils/localForage' 
 
 // export function flatList() {
 //   return axios({
@@ -43,26 +43,31 @@ export function list() {
   })
 }
 
-// export function download(book, onSucess, onError, onProgress) {
-//   if (onProgress == null) {
-//     onProgress = onError
-//     onError = null
-//   }
-//   return axios.create({
-//     baseURL: process.env.VUE_APP_EPUB_URL,
-//     method: 'get',
-//     responseType: 'blob',
-//     timeout: 180 * 1000,
-//     onDownloadProgress: progressEvent => {
-//       if (onProgress) onProgress(progressEvent)
-//     }
-//   }).get(`${book.categoryText}/${book.fileName}.epub`)
-//     .then(res => {
-//       const blob = new Blob([res.data])
-//       setLocalForage(book.fileName, blob,
-//         () => onSucess(book),
-//         err => onError(err))
-//     }).catch(err => {
-//       if (onError) onError(err)
-//     })
-// }
+// 电子书下载调用的api
+export function download(book, onSucess, onError, onProgress) {
+  // 如果只传入三个参数
+  if (onProgress == null) {
+    onProgress = onError
+    onError = null
+  }
+  // 可以使用自定义配置新建一个 axios 实例
+  // axios.create([config])
+  return axios.create({
+    baseURL: process.env.VUE_APP_EPUB_URL,
+    method: 'get',
+    responseType: 'blob', // 下载电子书是一个blob对象，这里定义了可以省去我们自己转换blob对象
+    timeout: 180 * 1000, // 超时时间
+    onDownloadProgress: progressEvent => { // 如果第4个参数onProgress存在，则返回progressEvent
+      if (onProgress) onProgress(progressEvent)
+    }
+  }).get(`${book.categoryText}/${book.fileName}.epub`)
+    .then(res => {
+      // 将获取到的图书blob格式的文件保存到 indexDB 中（key值为书名）
+      const blob = new Blob([res.data])
+      setLocalForage(book.fileName, blob,
+        () => onSucess(book), // 保存成功，则将图书
+        err => onError(err)) // 保存失败，则将错误信息传递给第三个参数onError
+    }).catch(err => { // 出现异常，则将错误信息传递给第三个参数onError
+      if (onError) onError(err)
+    })
+}

@@ -15,6 +15,7 @@
 <script>
   import { ebookMixin } from '../../utils/mixin'
   import { getFontFamily, saveFontFamily, getFontSize, saveFontSize, getTheme, saveTheme, getLocation } from '../../utils/localStorage'
+  import { getLocalForage } from '../../utils/localForage'
   import { flatten } from '../../utils/book'
 
   import Epub from 'epubjs'
@@ -268,9 +269,7 @@
         })
       },
       // 初始化电子书（在这里调用上面的方法）
-      initEpub() {
-        // 拼接静态服务器资源的位置+文件名字
-        const url = `${process.env.VUE_APP_RES_URL}` + '/epub/' + this.fileName + '.epub'
+      initEpub(url) {
         // 实例化一个 book对象
         this.book = new Epub(url)
         // 将实例化的book对象 传给公共变量 currentBook
@@ -295,14 +294,26 @@
       }
     },
     mounted() {
-      // 根据地址栏的信息 拼取图书的链接后缀
-      const fileName = this.$route.params.fileName.split('|').join('/')
-      // 将获取的图书链接后缀 保存到store中
-      this.setFileName(fileName)
-        .then(() => {
-          this.initEpub()
-        })
+      // 根据地址栏的信息，获得一个books数组（只有两个数据，1分类，2书名）
+      const books = this.$route.params.fileName.split('|')
+      const fileName = books[1] // 获取书名
+      // 传入书名在indexDB中查找该书籍
+      getLocalForage(fileName, (err, blob) => {
+        if (!err && blob) { // 如果查找得到，则传入indexDB的blob对象
+          this.setFileName(books.join('/')).then(() => {
+            this.initEpub(blob)
+          })
+        } else { // 如果没有找到离线缓存的电子书，则在线获取
+          this.setFileName(books.join('/')).then(() => {
+            // 拼接静态服务器资源的位置+文件名字
+            const url = process.env.VUE_APP_EPUB_URL + '/' + this.fileName + '.epub'
+            this.initEpub(url)
+          })
+        }
+      })
     }
+    
+
   }
 </script>
 
