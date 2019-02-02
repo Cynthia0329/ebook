@@ -50,6 +50,10 @@ export default new Router({
         // }
       ]
     
+    },
+    { // 用户主组件
+      path: '/user',
+      component: () => import('./views/user/index.vue')
     }
   ]
 })

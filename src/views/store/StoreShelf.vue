@@ -10,6 +10,7 @@
       <shelf-list :data="shelfList"></shelf-list>
     </scroll>
     <!-- <shelf-footer></shelf-footer> -->
+    <footer-button :currentTab="1"></footer-button>
   </div>
 </template>
 
@@ -21,6 +22,7 @@
   // import ShelfSearch from '../../components/shelf/ShelfSearch'
   import ShelfList from '../../components/shelf/ShelfList'
   // import ShelfFooter from '../../components/shelf/ShelfFooter'
+  import FooterButton from '../../components/common/FooterButton'
   import { shelf } from '../../api/store'
 
   export default {
@@ -30,15 +32,19 @@
       ShelfTitle,
       // ShelfSearch,
       ShelfList,
-      // ShelfFooter
+      // ShelfFooter,
+      FooterButton
     },
     watch: {
-      // isEditMode(isEditMode) {
-      //   this.scrollBottom = isEditMode ? 48 : 0
-      //   this.$nextTick(() => {
-      //     this.$refs.scroll.refresh()
-      //   })
-      // }
+      // 处于编辑模式的时候改变底层的bottom值
+      isEditMode(isEditMode) {
+        this.scrollBottom = isEditMode ? 48 : 0
+        // 在数据变化后要执行的某个操作，而这个操作需要使用随数据改变而改变的DOM结构的时候
+        // 这个操作都应该放进Vue.nextTick()的回调函数中。
+        this.$nextTick(() => {
+          this.$refs.scroll.refresh()
+        })
+      }
     },
     data() {
       return {

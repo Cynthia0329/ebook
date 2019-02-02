@@ -5,6 +5,7 @@ import store from './store'
 import i18n from './lang'
 // import './mock'
 
+import './utils/boost' // 引入拓展JS方法
 import './assets/styles/icon.css' // 引入字体图标
 import './assets/fonts/daysOne.css' // 引入Web字体
 import './assets/styles/global.scss' // 引入全局样式

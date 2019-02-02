@@ -44,13 +44,19 @@
       onItemClick() {
         // 判断是否处于编辑模式下
         if (this.isEditMode) {
+          if (this.data.type === 1) {
+            // 点击之后，设置图书的selected属性
           this.data.selected = !this.data.selected
           if (this.data.selected) {
             this.shelfSelected.pushWithoutDuplicate(this.data)
+            this.setShelfSelected(this.shelfSelected)
           } else {
             this.setShelfSelected(this.shelfSelected.filter(item => item.id !== this.data.id))
           }
+          }
+          
         } else {
+          // 不是编辑模式的时候
           if (this.data.type === 1) { // 1：展示图书详情
             this.showBookDetail(this.data)
           } else if (this.data.type === 2) {  // 2：展示书架分类组
