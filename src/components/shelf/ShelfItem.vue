@@ -8,6 +8,7 @@
                :is="item"
                :data="data">
     </component>
+    <!-- 编辑模式下出现的图标 -->
     <div class="icon-selected"
          :class="{'is-selected': data.selected}"
          v-show="isEditMode && data.type === 1">
@@ -41,27 +42,28 @@
     },
     methods: {
       onItemClick() {
-        // if (this.isEditMode) {
-        //   this.data.selected = !this.data.selected
-        //   if (this.data.selected) {
-        //     this.shelfSelected.pushWithoutDuplicate(this.data)
-        //   } else {
-        //     this.setShelfSelected(this.shelfSelected.filter(item => item.id !== this.data.id))
-        //   }
-        // } else {
-        //   if (this.data.type === 1) {
-        //     this.showBookDetail(this.data)
-        //   } else if (this.data.type === 2) {
-        //     this.$router.push({
-        //       path: '/store/category',
-        //       query: {
-        //         title: this.data.title
-        //       }
-        //     })
-        //   } else {
-        //     gotoStoreHome(this)
-        //   }
-        // }
+        // 判断是否处于编辑模式下
+        if (this.isEditMode) {
+          this.data.selected = !this.data.selected
+          if (this.data.selected) {
+            this.shelfSelected.pushWithoutDuplicate(this.data)
+          } else {
+            this.setShelfSelected(this.shelfSelected.filter(item => item.id !== this.data.id))
+          }
+        } else {
+          if (this.data.type === 1) { // 1：展示图书详情
+            this.showBookDetail(this.data)
+          } else if (this.data.type === 2) {  // 2：展示书架分类组
+            this.$router.push({
+              path: '/store/category',
+              query: {
+                title: this.data.title
+              }
+            })
+          } else {
+            gotoStoreHome(this) // 3：展示书城首页
+          }
+        }
       }
     }
   }
@@ -74,21 +76,25 @@
     position: relative;
     width: 100%;
     height: 100%;
+    // 当type为1和2（默认和分类）时，显示阴影
     &.shelf-item-shadow {
       box-shadow: px2rem(2) px2rem(2) px2rem(6) px2rem(2) rgba(200, 200, 200, .3);
     }
     .shelf-item-comp {
       opacity: 1;
+      // 编辑模式下，分类组的封面透明度减少
       &.is-edit {
         opacity: .5;
       }
     }
+    // 编辑模式下出现的图标
     .icon-selected {
       position: absolute;
       bottom: px2rem(2);
       right: px2rem(2);
       font-size: px2rem(18);
       color: rgba(0, 0, 0, .4);
+      // 选中时的样式
       &.is-selected {
         color: $color-blue;
       }

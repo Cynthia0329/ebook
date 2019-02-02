@@ -75,6 +75,7 @@ export function computeId(list) {
 
 // 进入书籍详情页的方法
 export function gotoBookDetail(vue, book) {
+  // vue.$router.push() 在history栈中添加一条新的记录。
   vue.$router.push({
     path: '/store/detail',
     query: {
@@ -84,22 +85,24 @@ export function gotoBookDetail(vue, book) {
   })
 }
 
-// export function gotoStoreHome(vue) {
-//   vue.$router.push({
-//     path: '/store/home'
-//   })
-// }
+// 进入书城首页
+export function gotoStoreHome(vue) {
+  // vue.$router.push() 在history栈中添加一条新的记录。
+  vue.$router.push({
+    path: '/store/home'
+  })
+}
 
-// ？？？
-export function appendAddToShelf(list) {
-  list.push({
+// 添加type为3到shelfList数组中
+export function appendAddToShelf(shelfList) {
+  shelfList.push({
     id: -1,
     type: 3
   })
-  return list
+  return shelfList
 }
 
-// 过滤图书列表，得到书架上默认和分组中的所有图书
+// 过滤图书列表，得到书架上默认和分组中的所有图书（移除type为3）
 export function removeAddFromShelf(list) {
   if (!list) {
     return []

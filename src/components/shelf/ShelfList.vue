@@ -4,7 +4,9 @@
                       tag="div"
                       id="shelf-list">
       <div class="shelf-list-item-wrapper" v-for="item in data" :key="item.id">
+        <!-- 图书封面样式组件 -->
         <shelf-item :data="item" :style="{height: itemHeight}"></shelf-item>
+        <!-- 图书标题 -->
         <div class="shelf-list-title-wrapper">
           <span class="shelf-list-title title-small">{{ item.title }}</span>
         </div>
@@ -26,7 +28,7 @@
     props: {
       top: {
         type: Number,
-        default: 94
+        default: 50
       },
       data: Array // shelfList数组
     },

@@ -28,7 +28,7 @@ export default new Router({
           path: 'shelf',
           component: () => import('./views/store/StoreShelf.vue')
         },
-        // { // 分类页
+        // { // 书架分类页
         //   path: 'category',
         //   component: () => import('./views/store/StoreCategory.vue')
         // },

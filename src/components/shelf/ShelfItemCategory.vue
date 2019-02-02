@@ -1,5 +1,6 @@
 <template>
   <div class="shelf-item-category">
+    <!-- 图书分类封面：九宫格 -->
     <div class="shelf-item-category-list" v-if="data.itemList.length > 0">
       <div class="shelf-item-category-item" v-for="(item, index) in data.itemList" :key="index">
         <img class="shelf-item-category-img" :src="item.cover">
@@ -15,6 +16,9 @@
   export default {
     props: {
       data: Object
+    },
+    mounted() {
+    //  console.log(this.data.itemList) //测试
     }
   }
 </script>
@@ -24,7 +28,8 @@
   .shelf-item-category {
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    overflow: hidden; // 隐藏多余的书
+    // 图书分类封面：九宫格
     .shelf-item-category-list {
       display: flex;
       flex-flow: row wrap;
@@ -38,12 +43,15 @@
         width: 33.33%;
         height: 33.33%;
         box-sizing: border-box;
+        // 九宫格的第一列
         &:nth-child(3n+1) {
           padding: 0 px2rem(2.5) px2rem(5) px2rem(5);
         }
+        // 九宫格的第二列
         &:nth-child(3n+2) {
           padding: 0 px2rem(2.5) px2rem(5) px2rem(2.5);
         }
+        // 九宫格的第三列
         &:nth-child(3n+3) {
           padding: 0 px2rem(5) px2rem(5) px2rem(2.5);
         }

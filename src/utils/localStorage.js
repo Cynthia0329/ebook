@@ -127,8 +127,8 @@ export function saveLocale(locale) {
 }
 
 // 书架的离线存储
-export function saveBookShelf(shelf) {
-  return setLocalStorage('shelf', shelf)
+export function saveBookShelf(shelfList) {
+  return setLocalStorage('shelf', shelfList)
 }
 
 export function getBookShelf() {

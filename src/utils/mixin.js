@@ -182,9 +182,12 @@ export const storeShelfMixin = {
       // 'setShelfCategory',
       // 'setCurrentType'
     ]),
-    // showBookDetail(book) {
-    //   gotoBookDetail(this, book)
-    // },
+
+    // 展示书籍详情页
+    showBookDetail(book) {
+      gotoBookDetail(this, book)
+    },
+
     // getCategoryList(title) {
     //   this.getShelfList().then(() => {
     //     const categoryList = this.shelfList.filter(book => book.type === 2 && book.title === title)[0]
@@ -192,7 +195,7 @@ export const storeShelfMixin = {
     //   })
     // },
 
-    // 得到书架列表
+    // 得到书架列表数据：shelfList数组
     getShelfList() {
       let shelfList = getBookShelf()
       if (!shelfList) {

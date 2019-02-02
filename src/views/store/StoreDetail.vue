@@ -288,6 +288,7 @@
           })
         }
       },
+      // 在history记录中前进或者后退val步，当val为0时刷新当前页面。
       back() {
         this.$router.go(-1)
       },
