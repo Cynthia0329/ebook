@@ -164,15 +164,18 @@
       // 点击编辑按钮
       onEditClick() {
         if (!this.isEditMode) {
-          // this.setShelfSelected([])
-          // this.shelfList.forEach(item => {
-          //   item.selected = false
-          //   if (item.itemList) {
-          //     item.itemList.forEach(subItem => {
-          //       subItem.selected = false
-          //     })
-          //   }
-          // })
+          // 初始化选择的图书列表数组
+          this.setShelfSelected([])
+          // 将图书的选中状态全部设置为false
+          this.shelfList.forEach(item => {
+            item.selected = false
+            // ？？？
+            if (item.itemList) {
+              item.itemList.forEach(subItem => {
+                subItem.selected = false
+              })
+            }
+          })
         }
         this.setIsEditMode(!this.isEditMode)
       },

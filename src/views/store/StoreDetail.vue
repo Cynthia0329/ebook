@@ -179,6 +179,7 @@
           this.setShelfList(getBookShelf())
         }
       },
+      // 显示提示框（并设置提示框中的文字内容）
       showToast(text) {
         this.toastText = text
         this.$refs.toast.show()

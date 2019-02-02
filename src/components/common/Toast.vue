@@ -10,6 +10,7 @@
 
 <script>
   export default {
+    name: 'toast',
     props: {
       text: [String, Number],
       timeout: {
@@ -26,6 +27,7 @@
       hide() {
         this.visible = false
       },
+      // 定时显示提示消息
       show() {
         clearTimeout(this.task)
         this.task = null

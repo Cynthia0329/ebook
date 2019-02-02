@@ -2,13 +2,18 @@
   <div class="shelf-footer" v-show="isEditMode">
     <div class="shelf-footer-tab-wrapper" v-for="item in tabs" :key="item.index" @click="onTabClick(item)">
       <div class="shelf-footer-tab" :class="{'is-selected': isSelected}">
+        <!-- 1：私密阅读 -->
         <div class="icon-private tab-icon" v-if="item.index === 1 && !isPrivate"></div>
         <div class="icon-private-see tab-icon" v-if="item.index === 1 && isPrivate"></div>
+        <!-- 2：开启离线 -->
         <div class="icon-download tab-icon" v-if="item.index === 2 && !isDownload"></div>
         <div class="icon-download-remove tab-icon" v-if="item.index === 2 && isDownload"></div>
+        <!-- 3：移动到... -->
         <div class="icon-move tab-icon" v-if="item.index === 3"></div>
+        <!-- 4：移除书架 -->
         <div class="icon-shelf tab-icon" v-if="item.index === 4"></div>
-        <div class="tab-text" :class="{'remove-text': item.index === 4}">{{label(item)}}</div>
+        <!-- 图标下的文字 -->
+        <div class="tab-text" :class="{'remove-text': item.index === 4}">{{ label(item) }}</div>
       </div>
     </div>
   </div>
@@ -18,21 +23,23 @@
   import { storeShelfMixin } from '../../utils/mixin'
   import { saveBookShelf, removeLocalStorage } from '../../utils/localStorage'
   import { download } from '../../api/store'
-  import { removeLocalForage } from '../../utils/localForage'
+  // import { removeLocalForage } from '../../utils/localForage'
 
   export default {
     mixins: [storeShelfMixin],
     computed: {
+      // 判断是否选择了书籍
       isSelected() {
         return this.shelfSelected && this.shelfSelected.length > 0
       },
+      // 按钮对象数组
       tabs() {
         return [
-          {
-            label: this.$t('shelf.private'),
-            label2: this.$t('shelf.noPrivate'),
-            index: 1
-          },
+          // {
+          //   label: this.$t('shelf.private'),
+          //   label2: this.$t('shelf.noPrivate'),
+          //   index: 1
+          // },
           {
             label: this.$t('shelf.download'),
             label2: this.$t('shelf.delete'),
@@ -48,19 +55,21 @@
           }
         ]
       },
-      isPrivate() {
-        if (!this.isSelected) {
-          return false
-        } else {
-          return this.shelfSelected.every(item => item.private)
-        }
-      },
+      // 判断选择的图书是否全部为私密阅读状态
+      // isPrivate() {
+      //   if (!this.isSelected) {
+      //     return false
+      //   } else {
+      //     return this.shelfSelected.every(item => item.private)
+      //   }
+      // },
       isDownload() {
-        if (!this.isSelected) {
-          return false
-        } else {
-          return this.shelfSelected.every(item => item.cache)
-        }
+        // if (!this.isSelected) {
+        //   return false
+        // } else {
+        //   return this.shelfSelected.every(item => item.cache)
+        // }
+        return null
       }
     },
     data() {
@@ -69,56 +78,62 @@
       }
     },
     methods: {
-      async downloadSelectedBook() {
-        for (let i = 0; i < this.shelfSelected.length; i++) {
-          await this.downloadBook(this.shelfSelected[i])
-            .then(book => {
-              book.cache = true
-            })
-        }
-      },
-      downloadBook(book) {
-        let text = ''
-        const toast = this.toast({
-          text
-        })
-        toast.continueShow()
-        return new Promise((resolve, reject) => {
-          download(book, book => {
-            toast.remove()
-            resolve(book)
-          }, reject, progressEvent => {
-            const progress = Math.floor(progressEvent.loaded / progressEvent.total * 100) + '%'
-            text = this.$t('shelf.progressDownload').replace('$1', `${book.fileName}.epub(${progress})`)
-            toast.updateText(text)
-          })
-        })
-      },
-      removeSelectedBook() {
-        Promise.all(this.shelfSelected.map(book => this.removeBook(book)))
-          .then(books => {
-            books.map(book => {
-              book.cache = false
-            })
-            saveBookShelf(this.shelfList)
-            this.simpleToast(this.$t('shelf.removeDownloadSuccess'))
-          })
-      },
-      removeBook(book) {
-        return new Promise((resolve, reject) => {
-          removeLocalStorage(`${book.categoryText}/${book.fileName}-info`)
-          removeLocalForage(`${book.fileName}`)
-          resolve(book)
-        })
-      },
+      // async downloadSelectedBook() {
+      //   for (let i = 0; i < this.shelfSelected.length; i++) {
+      //     await this.downloadBook(this.shelfSelected[i])
+      //       .then(book => {
+      //         book.cache = true
+      //       })
+      //   }
+      // },
+      // downloadBook(book) {
+      //   let text = ''
+      //   const toast = this.toast({
+      //     text
+      //   })
+      //   toast.continueShow()
+      //   return new Promise((resolve, reject) => {
+      //     download(book, book => {
+      //       toast.remove()
+      //       resolve(book)
+      //     }, reject, progressEvent => {
+      //       const progress = Math.floor(progressEvent.loaded / progressEvent.total * 100) + '%'
+      //       text = this.$t('shelf.progressDownload').replace('$1', `${book.fileName}.epub(${progress})`)
+      //       toast.updateText(text)
+      //     })
+      //   })
+      // },
+      // removeSelectedBook() {
+      //   Promise.all(this.shelfSelected.map(book => this.removeBook(book)))
+      //     .then(books => {
+      //       books.map(book => {
+      //         book.cache = false
+      //       })
+      //       saveBookShelf(this.shelfList)
+      //       this.simpleToast(this.$t('shelf.removeDownloadSuccess'))
+      //     })
+      // },
+      // removeBook(book) {
+      //   return new Promise((resolve, reject) => {
+      //     removeLocalStorage(`${book.categoryText}/${book.fileName}-info`)
+      //     removeLocalForage(`${book.fileName}`)
+      //     resolve(book)
+      //   })
+      // },
+
+      // 隐藏弹出框
       hidePopup() {
         this.popupMenu.hide()
       },
+
+      // 点击弹出按钮后：隐藏弹出按钮=>关闭编辑模式=>将书架中的图书状态保存在本地
       onComplete() {
         this.hidePopup()
         this.setIsEditMode(false)
         saveBookShelf(this.shelfList)
       },
+
+      // 设置私密阅读
       setPrivate() {
         let isPrivate
         if (this.isPrivate) {
@@ -136,42 +151,47 @@
           this.simpleToast(this.$t('shelf.closePrivateSuccess'))
         }
       },
-      async setDownload() {
-        this.onComplete()
-        if (this.isDownload) {
-          this.removeSelectedBook()
-        } else {
-          await this.downloadSelectedBook()
-          saveBookShelf(this.shelfList)
-          this.simpleToast(this.$t('shelf.setDownloadSuccess'))
-        }
-      },
-      removeSelected() {
-        this.shelfSelected.forEach(selected => {
-          this.setShelfList(this.shelfList.filter(book => book !== selected))
-        })
-        this.setShelfSelected([])
-        this.onComplete()
-      },
-      showPrivate() {
-        this.popupMenu = this.popup({
-          title: this.isPrivate ? this.$t('shelf.closePrivateTitle') : this.$t('shelf.setPrivateTitle'),
-          btn: [
-            {
-              text: this.isPrivate ? this.$t('shelf.close') : this.$t('shelf.open'),
-              click: () => {
-                this.setPrivate()
-              }
-            },
-            {
-              text: this.$t('shelf.cancel'),
-              click: () => {
-                this.hidePopup()
-              }
-            }
-          ]
-        }).show()
-      },
+      // async setDownload() {
+      //   this.onComplete()
+      //   if (this.isDownload) {
+      //     this.removeSelectedBook()
+      //   } else {
+      //     await this.downloadSelectedBook()
+      //     saveBookShelf(this.shelfList)
+      //     this.simpleToast(this.$t('shelf.setDownloadSuccess'))
+      //   }
+      // },
+
+      // removeSelected() {
+      //   this.shelfSelected.forEach(selected => {
+      //     this.setShelfList(this.shelfList.filter(book => book !== selected))
+      //   })
+      //   this.setShelfSelected([])
+      //   this.onComplete()
+      // },
+
+      // 私密阅读弹出框
+      // showPrivate() {
+      //   this.popupMenu = this.popup({
+      //     title: this.isPrivate ? this.$t('shelf.closePrivateTitle') : this.$t('shelf.setPrivateTitle'),
+      //     btn: [
+      //       {
+      //         text: this.isPrivate ? this.$t('shelf.close') : this.$t('shelf.open'),
+      //         click: () => {
+      //           this.setPrivate()
+      //         }
+      //       },
+      //       {
+      //         text: this.$t('shelf.cancel'),
+      //         click: () => {
+      //           this.hidePopup()
+      //         }
+      //       }
+      //     ]
+      //   }).show()
+      // },
+
+      // 离线缓存弹出框
       showDownload() {
         this.popupMenu = this.popup({
           title: this.isDownload ? this.$t('shelf.removeDownloadTitle') : this.$t('shelf.setDownloadTitle'),
@@ -191,6 +211,8 @@
           ]
         }).show()
       },
+
+      // 移出书架弹出框
       showRemove() {
         let title
         if (this.shelfSelected.length === 1) {
@@ -217,14 +239,16 @@
           ]
         }).show()
       },
+
+      // 点击底层按钮，显示对应的弹出框
       onTabClick(item) {
-        if (!this.isSelected) {
+        if (!this.isSelected) { // 没有选择图书的时候，没有点击事件发生
           return
         }
         switch (item.index) {
-          case 1:
-            this.showPrivate()
-            break
+          // case 1:
+          //   this.showPrivate()
+          //   break
           case 2:
             this.showDownload()
             break
@@ -238,10 +262,11 @@
             break
         }
       },
+      // 动态显示图标下的文字
       label(item) {
         switch (item.index) {
-          case 1:
-            return this.isPrivate ? item.label2 : item.label
+          // case 1:
+          //   return this.isPrivate ? item.label2 : item.label
           case 2:
             return this.isDownload ? item.label2 : item.label
           default:

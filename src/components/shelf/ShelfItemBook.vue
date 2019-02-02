@@ -2,8 +2,8 @@
   <div class="shelf-item-book">
     <img class="shelf-item-book-cover" :src="data.cover">
     <div class="private-wrapper" v-show="data.private"></div>
-    <div class="private-icon-wrapper" v-show="data.private">
-      <span class="icon-private"></span>
+    <div class="private-icon-wrapper" v-show="data.cache">
+      <span class="icon-download"></span>
     </div>
   </div>
 </template>

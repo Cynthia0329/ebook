@@ -9,8 +9,8 @@
       <!-- <shelf-search></shelf-search> -->
       <shelf-list :data="shelfList"></shelf-list>
     </scroll>
-    <!-- <shelf-footer></shelf-footer> -->
-    <footer-button :currentTab="1"></footer-button>
+    <shelf-footer></shelf-footer>
+    <footer-button :currentTab="1" v-show="!isEditMode"></footer-button>
   </div>
 </template>
 
@@ -21,7 +21,7 @@
   import Scroll from '../../components/common/Scroll'
   // import ShelfSearch from '../../components/shelf/ShelfSearch'
   import ShelfList from '../../components/shelf/ShelfList'
-  // import ShelfFooter from '../../components/shelf/ShelfFooter'
+  import ShelfFooter from '../../components/shelf/ShelfFooter'
   import FooterButton from '../../components/common/FooterButton'
   import { shelf } from '../../api/store'
 
@@ -32,7 +32,7 @@
       ShelfTitle,
       // ShelfSearch,
       ShelfList,
-      // ShelfFooter,
+      ShelfFooter,
       FooterButton
     },
     watch: {
