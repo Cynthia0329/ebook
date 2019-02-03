@@ -212,9 +212,6 @@
           return
         }
         switch (item.index) {
-          // case 1:
-          //   this.showPrivate()
-          //   break
           case 2:
             this.showDownload()
             break

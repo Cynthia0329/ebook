@@ -43,7 +43,7 @@
       height: px2rem(30);
       padding-bottom: px2rem(5);
       padding-left: px2rem(3);
-      // @include leftBottom;
+      @include leftBottom;
       .icon-download {
         font-size: px2rem(14);
         color: white;

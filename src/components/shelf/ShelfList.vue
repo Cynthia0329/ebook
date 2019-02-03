@@ -1,5 +1,6 @@
 <template>
   <div class="shelf-list" :style="{top: shelfListTop}">
+    <!-- 书架列表过渡动画 -->
     <transition-group name="list"
                       tag="div"
                       id="shelf-list">
@@ -66,6 +67,7 @@
         width: 33.33%;
         padding: px2rem(15);
         box-sizing: border-box;
+        // 书架列表过渡动画
         &.list-leave-active {
           display: none;
         }

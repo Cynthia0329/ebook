@@ -6,6 +6,7 @@
         <img class="shelf-item-category-img" :src="item.cover">
       </div>
     </div>
+    <!-- 当分组中没有书籍的时候显示的封面 -->
     <div class="shelf-item-category-bg" v-else>
       <span class="icon-book2"></span>
     </div>
@@ -33,7 +34,7 @@
     .shelf-item-category-list {
       display: flex;
       flex-flow: row wrap;
-      align-content: flex-start;
+      align-content: flex-start;  // 表示剩下空间如何排列：默认时靠左居中，添加这个属性后靠顶部居左显示
       width: 100%;
       height: 100%;
       padding-top: px2rem(5);

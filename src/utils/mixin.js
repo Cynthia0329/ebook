@@ -1,7 +1,6 @@
 import { mapGetters, mapActions } from 'vuex'
 import { themeList, addCss, removeAllCss, getReadTimeByMinute } from './book'
-import { gotoBookDetail, appendAddToShelf } from './store'
-// import { gotoBookDetail, appendAddToShelf, computeId, removeAddFromShelf } from './store'
+import { gotoBookDetail, appendAddToShelf, computeId, removeAddFromShelf } from './store'
 // import { shelf } from '../api/store'
 import { saveLocation, getSingleReadTime, getReadTime, getBookmark, getBookShelf, saveBookShelf } from './localStorage'
 
@@ -215,20 +214,21 @@ export const storeShelfMixin = {
       }
     },
 
-    // moveOutOfGroup(f) {
-    //   this.setShelfList(this.shelfList.map(book => {
-    //     if (book.type === 2 && book.itemList) {
-    //       book.itemList = book.itemList.filter(subBook => !subBook.selected)
-    //     }
-    //     return book
-    //   })).then(() => {
-    //     const list = computeId(appendAddToShelf([].concat(
-    //       removeAddFromShelf(this.shelfList), ...this.shelfSelected)))
-    //     this.setShelfList(list).then(() => {
-    //       this.simpleToast(this.$t('shelf.moveBookOutSuccess'))
-    //       if (f) f()
-    //     })
-    //   })
-    // }
+    // 将图书从分组中移出
+    moveOutOfGroup(f) {
+      this.setShelfList(this.shelfList.map(book => {
+        if (book.type === 2 && book.itemList) {
+          book.itemList = book.itemList.filter(subBook => !subBook.selected)
+        }
+        return book
+      })).then(() => {
+        const list = computeId(appendAddToShelf([].concat(
+          removeAddFromShelf(this.shelfList), ...this.shelfSelected)))
+        this.setShelfList(list).then(() => {
+          this.simpleToast(this.$t('shelf.moveBookOutSuccess'))
+          if (f) f()
+        })
+      })
+    }
   }
 }

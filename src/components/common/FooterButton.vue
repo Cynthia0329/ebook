@@ -50,7 +50,7 @@
     width: 100%;
     height: px2rem(54);
     background: white;
-    box-shadow: 0 px2rem(-5) px2rem(8) rgba(0, 0, 0, .15);
+    box-shadow: 0 px2rem(-3) px2rem(6) rgba(0, 0, 0, .1);
     font-size: px2rem(20);
     .hide-box-shadow {
       box-shadow: none;

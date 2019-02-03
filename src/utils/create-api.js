@@ -2,12 +2,13 @@ import CreateAPI from 'vue-create-api'
 import Vue from 'vue'
 import Toast from '../components/common/Toast'
 import Popup from '../components/common/Popup'
-// import GroupDialog from '../components/shelf/ShelfGroupDialog'
+import GroupDialog from '../components/shelf/ShelfGroupDialog'
 
 Vue.use(CreateAPI)
 Vue.createAPI(Toast, true)
 Vue.createAPI(Popup, true)
-// Vue.createAPI(GroupDialog, true)
+Vue.createAPI(GroupDialog, true)
+
 Vue.mixin({
   methods: {
     // 提示消息1（1.5秒就消失）
@@ -30,10 +31,11 @@ Vue.mixin({
       toast.show()
       toast.updateText(text)
     },
-    // dialog(settings) {
-    //   return this.$createGroupDialog({
-    //     $props: settings
-    //   })
-    // }
+    // 对话框选项
+    dialog(settings) {
+      return this.$createGroupDialog({
+        $props: settings
+      })
+    }
   }
 })
