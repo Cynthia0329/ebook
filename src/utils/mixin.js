@@ -167,8 +167,8 @@ export const storeShelfMixin = {
       'shelfSelected',
       'shelfTitleVisible',
       'offsetY',
-      // 'shelfCategory',
-      // 'currentType'
+      'shelfCategory',
+      'currentType'
     ])
   },
   methods: {
@@ -178,8 +178,8 @@ export const storeShelfMixin = {
       'setShelfSelected',
       'setShelfTitleVisible',
       'setOffsetY',
-      // 'setShelfCategory',
-      // 'setCurrentType'
+      'setShelfCategory',
+      'setCurrentType'
     ]),
 
     // 展示书籍详情页
@@ -187,12 +187,13 @@ export const storeShelfMixin = {
       gotoBookDetail(this, book)
     },
 
-    // getCategoryList(title) {
-    //   this.getShelfList().then(() => {
-    //     const categoryList = this.shelfList.filter(book => book.type === 2 && book.title === title)[0]
-    //     this.setShelfCategory(categoryList)
-    //   })
-    // },
+    // 得到当前分组中的书籍列表
+    getCategoryList(title) {
+      this.getShelfList().then(() => {
+        const categoryList = this.shelfList.filter(book => book.type === 2 && book.title === title)[0]
+        this.setShelfCategory(categoryList)
+      })
+    },
 
     // 从本地获取书架列表状态信息数组，并更新vuex中的值
     getShelfList() {
@@ -216,16 +217,21 @@ export const storeShelfMixin = {
 
     // 将图书从分组中移出
     moveOutOfGroup(f) {
+      // 过滤选择的图书，更新当前分组的图书列表
       this.setShelfList(this.shelfList.map(book => {
-        if (book.type === 2 && book.itemList) {
+        if (book.type === 2 && book.itemList) { 
           book.itemList = book.itemList.filter(subBook => !subBook.selected)
         }
         return book
-      })).then(() => {
+      }))
+      // 将选择的图书添加到书架，更新书架中的图书列表（并序列化id值）
+      .then(() => {
         const list = computeId(appendAddToShelf([].concat(
           removeAddFromShelf(this.shelfList), ...this.shelfSelected)))
         this.setShelfList(list).then(() => {
+          // 弹出移除成功的对话框
           this.simpleToast(this.$t('shelf.moveBookOutSuccess'))
+          // 成功之后的回调函数
           if (f) f()
         })
       })

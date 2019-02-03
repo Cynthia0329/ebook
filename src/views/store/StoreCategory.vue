@@ -1,6 +1,8 @@
 <template>
   <div class="store-shelf">
+    <!-- 标题栏 -->
     <shelf-title :title="shelfCategory.title"></shelf-title>
+    <!-- 图书列表 -->
     <scroll class="store-shelf-scroll-wrapper"
             :top="0"
             :bottom="scrollBottom"
@@ -9,9 +11,11 @@
             v-if="ifShowList">
       <shelf-list :top="42" :data="shelfCategory.itemList"></shelf-list>
     </scroll>
+    <!-- 当前分组中没有图书时显示的页面 -->
     <div class="store-shelf-empty-view" v-else>
       {{$t('shelf.groupNone')}}
     </div>
+    <!-- 编辑模式工具栏 -->
     <shelf-footer></shelf-footer>
   </div>
 </template>
@@ -56,6 +60,7 @@
       }
     },
     mounted() {
+      // 根据分组名字得到当前分组列表，并设置当前的CurrentType值
       this.getCategoryList(this.$route.query.title)
       this.setCurrentType(2)
     }

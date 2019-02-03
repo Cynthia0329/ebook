@@ -58,8 +58,8 @@
     },
     mounted() {
       this.getShelfList() // 从本地获取书架列表状态信息数组，并更新vuex中的值
-      // this.setShelfCategory([])
-      // this.setCurrentType(1)
+      this.setShelfCategory([])
+      this.setCurrentType(1)
     }
   }
 </script>

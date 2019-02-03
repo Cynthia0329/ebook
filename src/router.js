@@ -28,10 +28,10 @@ export default new Router({
           path: 'shelf',
           component: () => import('./views/store/StoreShelf.vue')
         },
-        // { // 书架分类页
-        //   path: 'category',
-        //   component: () => import('./views/store/StoreCategory.vue')
-        // },
+        { // 书架分类页
+          path: 'category',
+          component: () => import('./views/store/StoreCategory.vue')
+        },
         { // 书城首页
           path: 'home',
           component: () => import('./views/store/StoreHome.vue')

@@ -5,8 +5,8 @@ const store = {
     shelfList: [],
     shelfSelected: [],
     shelfTitleVisible: true,
-    // shelfCategory: [], // 书架分类列表数据
-    // currentType: 1 // 书架列表为1，书架分类列表为2
+    shelfCategory: [], // 书架分组列表数据
+    currentType: 1 // 书架列表为1，书架分类列表为2
   },
   mutations: {
     // SET_FLAP_CARD_VISIBLE(state, visible) {
@@ -24,12 +24,12 @@ const store = {
     SET_SHELF_TITLE_VISIBLE(state, visible) {
       state.shelfTitleVisible = visible
     },
-    // SET_SHELF_CATEGORY(state, category) {
-    //   state.shelfCategory = category
-    // },
-    // SET_CURRENT_TYPE(state, type) {
-    //   state.currentType = type
-    // }
+    SET_SHELF_CATEGORY(state, shelfCategory) {
+      state.shelfCategory = shelfCategory
+    },
+    SET_CURRENT_TYPE(state, type) {
+      state.currentType = type
+    }
   }
 }
 

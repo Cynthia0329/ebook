@@ -61,6 +61,12 @@ const actions = {
   },
   setShelfList: ({ commit }, shelfList) => {
     return commit('SET_SHELF_LIST', shelfList)
+  },
+  setShelfCategory: ({ commit }, shelfCategory) => {
+    return commit('SET_SHELF_CATEGORY', shelfCategory)
+  },
+  setCurrentType: ({ commit }, currentType) => {
+    return commit('SET_CURRENT_TYPE', currentType)
   }
 }
 

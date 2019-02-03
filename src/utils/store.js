@@ -60,7 +60,7 @@ export function removeFromBookShelf(book) {
 //   return flatBookList(bookList).find(item => item.fileName === fileName)
 // }
 
-// ？？？
+// 修改数组的id值(id值比index值大1)
 export function computeId(list) {
   return list.map((book, index) => {
     if (book.type !== 3) {
