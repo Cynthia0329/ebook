@@ -10,7 +10,6 @@
         <div class="content-wrapper">
           <div class="title title-big" ref="title">{{item.title}}</div>
           <div class="author sub-title" ref="author">{{item.author}}</div>
-          <div class="result third-title" ref="result">{{resultText(item)}}</div>
         </div>
       </div>
     </div>
@@ -66,31 +65,16 @@
           this.index++
         }
       },
-      resultText(item) {
-        if (item && item.type && item.result) {
-          switch (item.type) {
-            case 1:
-              return this.$t('home.sameAuthor').replace('$1', item.result)
-            case 2:
-              return this.$t('home.sameReader').replace('$1', item.result)
-            case 3:
-              return this.$t('home.readPercent').replace('$1', item.percent).replace('$2', item.result)
-          }
-        }
-      },
-      resize() {
-        this.$nextTick(() => {
-          this.$refs.title.forEach(item => {
-            item.style.width = this.width
-          })
-          this.$refs.author.forEach(item => {
-            item.style.width = this.width
-          })
-          this.$refs.result.forEach(item => {
-            item.style.width = this.width
-          })
-        })
-      }
+      // resize() {
+      //   this.$nextTick(() => {
+      //     this.$refs.title.forEach(item => {
+      //       item.style.width = this.width
+      //     })
+      //     this.$refs.author.forEach(item => {
+      //       item.style.width = this.width
+      //     })
+      //   })
+      // }
     }
   }
 </script>

@@ -3,7 +3,6 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import i18n from './lang'
-// import './mock'
 
 import './utils/boost' // 引入拓展JS方法
 import './utils/create-api' // 引入全局组件插件

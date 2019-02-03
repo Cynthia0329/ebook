@@ -54,13 +54,10 @@
       }
     },
     mounted() {
+      // 从api接口中获取首页需要的数据
       home().then(response => {
         if (response && response.status === 200) {
           const data = response.data
-          // 生成随机数，将这个随机数传给flapcard组件生成随机的图书（暂未做）
-          const randomIndex = Math.floor(Math.random() * data.random.length)
-          this.random = data.random[randomIndex]
-
           this.banner = data.banner
           this.guessYouLike = data.guessYouLike
           this.categories = data.categories
