@@ -11,16 +11,18 @@
     <!-- 编辑模式下出现的图标 -->
     <div class="icon-selected"
          :class="{'is-selected': data.selected}"
-         v-show="isEditMode && data.type === 1">
+         v-show="isEditMode && (data.type === 1 || data.type === 4) ">
     </div>
   </div>
 </template>
 
 <script>
+  import { getLocalForage } from '../../utils/localForage'
   import { storeShelfMixin } from '../../utils/mixin'
   import ShelfBook from './ShelfItemBook'
   import ShelfCategory from './ShelfItemCategory'
   import ShelfAdd from './ShelfItemAdd'
+  import ShelfItemImport from './ShelfItemImport'
   import { gotoStoreHome } from '../../utils/store'
 
   export default {
@@ -30,21 +32,43 @@
     },
     computed: {
       item() {
-        return this.data.type === 1 ? this.book : (this.data.type === 2 ? this.category : this.add)
+        switch (this.data.type) {
+          case 1:
+          return this.book
+          case 2:
+          return this.category
+          case 3:
+          return this.add
+          case 4:
+          return this.impo
+        }
       }
     },
     data() {
       return {
         book: ShelfBook,
         category: ShelfCategory,
-        add: ShelfAdd
+        add: ShelfAdd,
+        impo: ShelfItemImport
       }
     },
     methods: {
+      // 隐藏弹出框
+      hidePopup() {
+        this.popupMenu.hide()
+      },
+      // 创建弹出框按钮事件（调用一次，只创建一条）
+      createPopupBtn(text, onClick, type = 'normal') {
+        return {
+          text: text,
+          type: type,
+          click: onClick
+        }
+      },
       onItemClick() {
         // 判断是否处于编辑模式下
         if (this.isEditMode) {
-          if (this.data.type === 1) {
+          if (this.data.type === 1 || this.data.type === 4) {
             // 点击之后，设置图书的selected属性
           this.data.selected = !this.data.selected
           if (this.data.selected) {
@@ -66,8 +90,28 @@
                 title: this.data.title
               }
             })
-          } else {
-            gotoStoreHome(this) // 3：展示书城首页
+          } else if (this.data.type === 3){
+             this.popupMenu = this.popup({
+              title: '请选择添加图书的方式',
+              local: true,
+              btn: [
+                // this.createPopupBtn('导入本地图书', () => {
+                //   console.log('test')
+                // }, 'danger'),
+                this.createPopupBtn('前往书城添加', () => {
+                  gotoStoreHome(this)
+                }),
+                this.createPopupBtn('取消', () => {
+                    this.hidePopup()
+                  })
+              ]
+            }).show()
+            // gotoStoreHome(this) // 3：展示书城首页
+          } else { // 4: 直接阅读
+              // 传入书名在indexDB中查找该书籍
+              this.$router.push({
+                path: `/ebook/local|${this.data.fileName}`
+              })
           }
         }
       }

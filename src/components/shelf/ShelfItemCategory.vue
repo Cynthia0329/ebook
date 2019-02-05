@@ -3,7 +3,8 @@
     <!-- 图书分类封面：九宫格 -->
     <div class="shelf-item-category-list" v-if="data.itemList.length > 0">
       <div class="shelf-item-category-item" v-for="(item, index) in data.itemList" :key="index">
-        <img class="shelf-item-category-img" :src="item.cover">
+        <img class="shelf-item-category-img" :src="item.cover" v-if="item.cover">
+        <div class="shelf-item-book-bg-wrapper" v-else></div>
       </div>
     </div>
     <!-- 当分组中没有书籍的时候显示的封面 -->
@@ -59,6 +60,11 @@
         .shelf-item-category-img {
           width: 100%;
           height: 100%;
+        }
+        .shelf-item-book-bg-wrapper {
+          width: 100%;
+          height: 100%;
+          background-color: lightblue;
         }
       }
     }

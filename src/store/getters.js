@@ -16,12 +16,16 @@ const book = {
   offsetY: state => state.book.offsetY,
   isBookmark: state => state.book.isBookmark,
   paginate: state => state.book.paginate,
+  eyeSet: state => state.book.eyeSet,
+  safeTime: state => state.book.safeTime,
   isEditMode: state => state.store.isEditMode,
   shelfSelected: state => state.store.shelfSelected,
   shelfTitleVisible: state => state.store.shelfTitleVisible,
   shelfList: state => state.store.shelfList,
   shelfCategory: state => state.store.shelfCategory,
-  currentType: state => state.store.currentType
+  currentType: state => state.store.currentType,
+  isLogin: state => state.user.isLogin, 
+  
 }
 
 export default book

@@ -1,13 +1,6 @@
 import axios from 'axios'
 import { setLocalForage } from '../utils/localForage' 
 
-// export function flatList() {
-//   return axios({
-//     method: 'get',
-//     url: `${process.env.VUE_APP_BOOK_URL}/book/flat-list`
-//   })
-// }
-
 // 书架页面调用的api
 export function shelf() {
   return axios({
@@ -43,6 +36,11 @@ export function list() {
   })
 }
 
+// 用户登录调用的api
+export function login(name, pwd) {
+  return axios.post('/login', { user: name, password: pwd })
+}
+
 // 电子书下载调用的api
 export function download(book, onSucess, onError, onProgress) {
   // 如果只传入三个参数
@@ -70,4 +68,25 @@ export function download(book, onSucess, onError, onProgress) {
     }).catch(err => { // 出现异常，则将错误信息传递给第三个参数onError
       if (onError) onError(err)
     })
+}
+
+export function sendAjax(file, onProgress) {
+  var fd = new FormData() // 创建form对象
+  fd.append('file', file) // 通过append向form对象添加数据
+  console.log('test')
+  console.log(file.name)
+
+  return axios.post(`${process.env.VUE_APP_BASE_URL}/addGoods2`, fd, {
+      onUploadProgress: (progressEvent) => { // 这里要用箭头函数
+          // 不然这个this的指向会有问题
+          if (onProgress) onProgress(progressEvent)
+      }
+  })
+}
+
+export function importEook(book, name) {
+  // 将获取到的图书blob格式的文件保存到 indexDB 中（key值为书名）
+  const blob = new Blob([book])
+  console.log(name)
+  setLocalForage(name, blob)
 }

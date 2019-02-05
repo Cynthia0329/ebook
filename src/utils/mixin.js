@@ -2,7 +2,7 @@ import { mapGetters, mapActions } from 'vuex'
 import { themeList, addCss, removeAllCss, getReadTimeByMinute } from './book'
 import { gotoBookDetail, appendAddToShelf, computeId, removeAddFromShelf } from './store'
 import { shelf } from '../api/store'
-import { saveLocation, getSingleReadTime, getReadTime, getBookmark, getBookShelf, saveBookShelf } from './localStorage'
+import { saveLocation, getSingleReadTime, getReadTime, getBookmark, getBookShelf, saveBookShelf, getIntegralCache, saveIntegralCache, saveDownTicket, getDownTicket } from './localStorage'
 
 // 阅读器相关的公用数据和方法
 export const ebookMixin = {
@@ -24,7 +24,9 @@ export const ebookMixin = {
       'navigation',
       'offsetY',
       'isBookmark',
-      'paginate'
+      'paginate',
+      'eyeSet',
+      'safeTime'
       ]),
       themeList() {
         return themeList(this)
@@ -51,7 +53,9 @@ export const ebookMixin = {
       'setNavigation',
       'setOffsetY',
       'setIsBookmark',
-      'setPaginate'
+      'setPaginate',
+      'setEyeSet',
+      'setSafeTime'
     ]),
     // 初始化全局样式：添加 本地存储的主题设置 对应的样式表
     initGlobalStyle() {
@@ -233,5 +237,60 @@ export const storeShelfMixin = {
         })
       })
     }
+  }
+}
+
+// 用户相关的公用数据和方法
+export const storeUserMixin = {
+  computed: {
+    ...mapGetters([
+      'isLogin',
+      'integral'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'setIsLogin'
+    ]),
+
+    // 从本地获取消耗的积分
+    getIntegral() {
+      let integral = getIntegralCache()
+      if (!integral) { // 如果本地中不存在书架的数据
+        // 读取api接口中的数据
+        // shelf().then(response => {
+        //   if (response.status === 200 && response.data && response.data.bookList) {
+        //     shelfList = appendAddToShelf(response.data.bookList)
+        //     saveBookShelf(shelfList)
+        //     return this.setShelfList(shelfList)
+        //   }
+        // })
+        let test = '0'
+        saveIntegralCache(test)
+        return getIntegralCache()
+      } else {
+        return getIntegralCache()
+      }
+    },
+
+    // 从本地获取下载券的张数
+    getTicket() {
+      let downTicket = getDownTicket()
+      if (!downTicket) { // 如果本地中不存在书架的数据
+        // 读取api接口中的数据
+        // shelf().then(response => {
+        //   if (response.status === 200 && response.data && response.data.bookList) {
+        //     shelfList = appendAddToShelf(response.data.bookList)
+        //     saveBookShelf(shelfList)
+        //     return this.setShelfList(shelfList)
+        //   }
+        // })
+        saveDownTicket('0')
+        return getDownTicket()
+      } else {
+        return getDownTicket()
+      }
+    },
+
   }
 }

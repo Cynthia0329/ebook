@@ -134,3 +134,21 @@ export function saveBookShelf(shelfList) {
 export function getBookShelf() {
   return getLocalStorage('shelf')
 }
+
+// 离线下载消耗的总积分的离线存储
+export function saveIntegralCache(integralCache) {
+  return setLocalStorage('integralCache', integralCache)
+}
+
+export function getIntegralCache() {
+  return getLocalStorage('integralCache')
+}
+
+// 下载券的离线存储
+export function saveDownTicket(downTicket) {
+  return setLocalStorage('downTicket', downTicket)
+}
+
+export function getDownTicket() {
+  return getLocalStorage('downTicket')
+}

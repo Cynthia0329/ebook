@@ -6,6 +6,18 @@
   <transition name="popup-slide-up">
     <div class="popup-wrapper" v-show="visible">
       <div class="popup-title" v-if="title && title.length > 0">{{title}}</div>
+       <label class="popup-btn"
+            for='my_file'
+            v-if="local && !test"
+            :class="{'danger': true}"
+            @click="onImpClick">导入本地epub电子书
+      </label>
+      <input type="file" name="file" @change="changeFile" id='my_file' v-show="false" />
+      <div class="popup-btn"
+           v-if="local && test"
+           :class="{'danger': true}"
+           @click="sendAjax">确认导入
+      </div>
       <div class="popup-btn"
            :class="{'danger': item.type==='danger'}"
            v-for="(item, index) in btn"
@@ -18,16 +30,25 @@
 </template>
 
 <script>
+  import { storeShelfMixin } from '../../utils/mixin'
+  import { importShelf } from '../../utils/store'
+  import { saveBookShelf } from '../../utils/localStorage'
+  import {
+    sendAjax, importEook
+  } from '../../api/store'
   export default {
     name: 'popup',
+    mixins: [storeShelfMixin],
     props: {
       title: String,
-      btn: Array
+      btn: Array,
+      local: Boolean
     },
     data() {
       return {
         popupVisible: false,
-        visible: false
+        visible: false,
+        test: false
       }
     },
     methods: {
@@ -44,7 +65,22 @@
         setTimeout(() => {
           this.popupVisible = false
         }, 200)
+      },
+      sendAjax: function() {
+        let fileName = this.file.name.replace(/\..*/, '').toString()
+        importEook(this.file, fileName)
+        this.setShelfList(importShelf(fileName))
+        this.hide()
+        this.test = !this.test
+      },
+      changeFile: function(e) {
+        this.file = e.target.files[0];
+      },
+      onImpClick() {
+        this.test = !this.test
       }
+    },
+    mounted() {
     }
   }
 </script>

@@ -67,7 +67,16 @@ const actions = {
   },
   setCurrentType: ({ commit }, currentType) => {
     return commit('SET_CURRENT_TYPE', currentType)
-  }
+  },
+  setIsLogin: ({ commit }, isLogin) => {
+    return commit('SET_IS_LOGIN', isLogin)
+  },
+  setEyeSet: ({ commit }, eyeSet) => {
+    return commit('SET_EYE_SET', eyeSet)
+  },
+  setSafeTime: ({ commit }, safeTime) => {
+    return commit('SET_SAFE_TIME', safeTime)
+  },
 }
 
 export default actions

@@ -3,8 +3,8 @@
     <div class="shelf-footer-tab-wrapper" v-for="item in tabs" :key="item.index" @click="onTabClick(item)">
       <div class="shelf-footer-tab" :class="{'is-selected': isSelected}">
         <!-- 2：开启离线 -->
-        <div class="icon-download tab-icon" v-if="item.index === 2 && !isDownload"></div>
-        <div class="icon-download-remove tab-icon" v-if="item.index === 2 && isDownload"></div>
+        <div class="icon-download tab-icon" v-if="item.index === 2 && !isDownload && !isLocal"></div>
+        <div class="icon-download-remove tab-icon" v-if="item.index === 2 && isAllDownload && !isLocal"></div>
         <!-- 3：移动到... -->
         <div class="icon-move tab-icon" v-if="item.index === 3"></div>
         <!-- 4：移除书架 -->
@@ -18,9 +18,10 @@
 
 <script>
   import { storeShelfMixin } from '../../utils/mixin'
-  import { saveBookShelf, removeLocalStorage } from '../../utils/localStorage'
+  import { saveBookShelf, removeLocalStorage, getDownTicket, saveDownTicket } from '../../utils/localStorage'
   import { download } from '../../api/store'
   import { removeLocalForage } from '../../utils/localForage'
+  import { Toast } from 'mint-ui'
 
   export default {
     mixins: [storeShelfMixin],
@@ -47,12 +48,28 @@
           }
         ]
       },
-      // 判断是否已经离线存储
+      // 判断是否包含已经离线存储的图书（此时关闭所有离线相关的图标）
       isDownload() {
         if (!this.isSelected) {
           return false
         } else {
+          return this.shelfSelected.some(item => item.cache)
+        }
+      },
+      // 判断是否全部为离线（此时显示删除离线）
+      isAllDownload() {
+        if (!this.isSelected) {
+          return false
+        } else {
           return this.shelfSelected.every(item => item.cache)
+        }
+      },
+      // 判断是否包含本地图书（只要有一本即为true）
+      isLocal() {
+        if (!this.isSelected) {
+          return false
+        } else {
+          return this.shelfSelected.some(item => item.type === 4)
         }
       }
     },
@@ -137,18 +154,38 @@
         this.onComplete()
         if (this.isDownload) {  // 如果全部为下载的书籍，则从本地缓存中移除
           this.removeSelectedBook()
-        } else {  // 下载选择的图书
+        } else {  
+          // 判断当前的下载券是否足够
+          if (parseInt(getDownTicket()) >= this.shelfSelected.length) {
+            // 下载选择的图书
+            saveDownTicket( parseInt(getDownTicket()) - this.shelfSelected.length)
           await this.downloadSelectedBook() // await：等待该异步方法执行完毕之后，再执行下面的事件
           saveBookShelf(this.shelfList) // 更新书架上的书籍状态信息列表
           this.simpleToast(this.$t('shelf.setDownloadSuccess')) // 弹出下载完成的对话框
+          } else if (parseInt(getDownTicket()) < 1) {
+            Toast({
+                  message: '您目前没有下载券，请先去兑换',
+                  duration: 2000
+                })
+          } else {
+            Toast({
+                  message: '您目前拥有的下载券不足够本次全部的下载，请减少电子书的数量或者兑换更多的下载券',
+                  duration: 2000
+                })
+          }
+          
         }
       },
 
       // 点击将选择的图书移出书架
       removeSelected() {
-        this.shelfSelected.forEach(selected => {
-          this.setShelfList(this.shelfList.filter(book => book !== selected))
-        })
+        this.setShelfList(this.shelfList
+          .filter(book => { // 将选择的书籍从书架列表中过滤掉
+            if (book.itemList) { // 如果是在书架页面的话，同理上面
+              book.itemList = book.itemList.filter(subBook => this.shelfSelected.indexOf(subBook) < 0)
+            }
+            return this.shelfSelected.indexOf(book) < 0
+          }))
         // 选择的图书中存在离线缓存的图书时，移出书架的同时删除本地的离线缓存
         if (this.shelfSelected.find(item => item.cache===true) != undefined) {  
           this.removeSelectedBook()
@@ -213,7 +250,13 @@
         }
         switch (item.index) {
           case 2:
-            this.showDownload()
+              if (!this.isDownload) { // 当为默认的图书的时候，显示离线缓存
+                this.showDownload()
+              } else if (this.isAllDownload&&!this.isLocal) { // 全部为不是本地图书的缓存，则显示删除缓存
+                this.showDownload()
+              } else if(this.isLocal&&this.isDownload || !this.isAllDownload) { // 包含已缓存或者本地图书，不显示操作
+                return 
+              }
             break
           case 3:
             this.dialog().show()
@@ -229,7 +272,13 @@
       label(item) {
         switch (item.index) {
           case 2:
-            return this.isDownload ? item.label2 : item.label
+          if (!this.isDownload) { // 当为默认的图书的时候，显示离线缓存
+            return item.label
+          } else if (this.isAllDownload&&!this.isLocal) { // 全部为不是本地图书的缓存，则显示删除缓存
+            return item.label2
+          } else if(this.isLocal&&this.isDownload || !this.isAllDownload) { // 包含已缓存或者本地图书，不显示操作
+            return null
+          }
           default:
             return item.label
         }

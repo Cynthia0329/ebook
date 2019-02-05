@@ -7,11 +7,14 @@ export default new Router({
   routes: [
     { // 首页重定向设置
       path: '/',
-      redirect: '/store/shelf'
+      redirect: '/user'
     },
     { // 阅读器主组件
       path: '/ebook',
       component: () => import('./views/ebook/index.vue'),
+      // meta: {
+      //   isLogin: false
+      // },
       children: [
         {
           path: ':fileName',
@@ -23,6 +26,9 @@ export default new Router({
       path: '/store',
       component: () => import('./views/store/index.vue'),
       redirect: '/store/home',
+      // meta: {
+      //   isLogin: false
+      // },
       children: [
         { // 书架页
           path: 'shelf',
@@ -43,17 +49,34 @@ export default new Router({
         { // 详情页
           path: 'detail',
           component: () => import('./views/store/StoreDetail.vue')
-        },
-        // { // 语音页
-        //   path: 'speaking',
-        //   component: () => import('./views/store/StoreSpeaking.vue')
-        // }
+        }
       ]
     
     },
     { // 用户主组件
       path: '/user',
       component: () => import('./views/user/index.vue')
+    },
+    { // 登录主组件
+      path: '/login',
+      component: () => import ('./views/user/login.vue'),
+      // meta: {
+      //   isLogin: false
+      // }
+    },
+    { // 注册主组件
+      path: '/register',
+      component: () => import ('./views/user/register.vue'),
+      // meta: {
+      //   isLogin: false
+      // }
+    },
+    { // 主页
+      path: '/home',
+      component: () => import ('./views/user/home.vue'),
+      // meta: {
+      //   isLogin: false
+      // }
     }
   ]
 })

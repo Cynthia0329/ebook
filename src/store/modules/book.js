@@ -17,6 +17,8 @@ const book = {
     offsetY: 0,
     isBookmark: null,
     paginate: '',
+    eyeSet: true,
+    safeTime: 0
   },
   mutations: {
     'SET_FILENAME': (state, fileName) => {
@@ -69,6 +71,12 @@ const book = {
     },
     'SET_PAGINATE': (state, paginate) => {
       state.paginate = paginate
+    },
+    'SET_EYE_SET': (state, eyeSet) => {
+      state.eyeSet = eyeSet
+    },
+    'SET_SAFE_TIME': (state, safeTime) => {
+      state.safeTime = safeTime
     }
   }
 }

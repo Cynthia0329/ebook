@@ -17,6 +17,28 @@ export function addToShelf(book) {
   saveBookShelf(shelfList)
 }
 
+// 导入一本图书到书架中
+export function importShelf(fileName) {
+  // 从本地中读取书架中的图书列表（包含默认和分类中的所有图书）
+  let shelfList = getBookShelf()
+  shelfList = removeAddFromShelf(shelfList)
+  // 设置新添加的图书为默认图书。缓存状态为真
+  let bookImport = {
+    type: 4,
+    cache: true,
+    selected: false,
+    fileName: fileName,
+    title: fileName
+  }
+  shelfList.push(bookImport)
+  shelfList = computeId(shelfList)
+  // 将...添加到书架上
+  shelfList = appendAddToShelf(shelfList)
+  // 重新保存本地中的shelfList数组
+  saveBookShelf(shelfList)
+  return shelfList
+}
+
 // 将图书从书架移除
 export function removeFromBookShelf(book) {
   return getBookShelf().filter(item => {
@@ -26,39 +48,6 @@ export function removeFromBookShelf(book) {
     return item.fileName !== book.fileName
   })
 }
-
-// export function flatBookList(bookList) {
-//   if (bookList) {
-//     let orgBookList = bookList.filter(item => {
-//       return item.type !== 3
-//     })
-//     const categoryList = bookList.filter(item => {
-//       return item.type === 2
-//     })
-//     categoryList.forEach(item => {
-//       const index = orgBookList.findIndex(v => {
-//         return v.id === item.id
-//       })
-//       if (item.itemList) {
-//         item.itemList.forEach(subItem => {
-//           orgBookList.splice(index, 0, subItem)
-//         })
-//       }
-//     })
-//     orgBookList.forEach((item, index) => {
-//       item.id = index + 1
-//     })
-//     orgBookList = orgBookList.filter(item => item.type !== 2)
-//     return orgBookList
-//   } else {
-//     return []
-//   }
-// }
-
-// export function findBook(fileName) {
-//   const bookList = getLocalStorage('shelf')
-//   return flatBookList(bookList).find(item => item.fileName === fileName)
-// }
 
 // 修改数组的id值(id值比index值大1)
 export function computeId(list) {
@@ -109,64 +98,6 @@ export function removeAddFromShelf(list) {
   }
   return list.filter(item => item.type !== 3)
 }
-
-// export const flapCardList = [
-//   {
-//     r: 255,
-//     g: 102,
-//     _g: 102,
-//     b: 159,
-//     imgLeft: 'url(' + require('@/assets/images/gift-left.png') + ')',
-//     imgRight: 'url(' + require('@/assets/images/gift-right.png') + ')',
-//     backgroundSize: '50% 50%',
-//     zIndex: 100,
-//     rotateDegree: 0
-//   },
-//   {
-//     r: 74,
-//     g: 171,
-//     _g: 171,
-//     b: 255,
-//     imgLeft: 'url(' + require('@/assets/images/compass-left.png') + ')',
-//     imgRight: 'url(' + require('@/assets/images/compass-right.png') + ')',
-//     backgroundSize: '50% 50%',
-//     zIndex: 99,
-//     rotateDegree: 0
-//   },
-//   {
-//     r: 255,
-//     g: 198,
-//     _g: 198,
-//     b: 102,
-//     imgLeft: 'url(' + require('@/assets/images/star-left.png') + ')',
-//     imgRight: 'url(' + require('@/assets/images/star-right.png') + ')',
-//     backgroundSize: '50% 50%',
-//     zIndex: 98,
-//     rotateDegree: 0
-//   },
-//   {
-//     r: 255,
-//     g: 102,
-//     _g: 102,
-//     b: 159,
-//     imgLeft: 'url(' + require('@/assets/images/heart-left.png') + ')',
-//     imgRight: 'url(' + require('@/assets/images/heart-right.png') + ')',
-//     backgroundSize: '50% 50%',
-//     zIndex: 97,
-//     rotateDegree: 0
-//   },
-//   {
-//     r: 59,
-//     g: 201,
-//     _g: 201,
-//     b: 22,
-//     imgLeft: 'url(' + require('@/assets/images/crown-left.png') + ')',
-//     imgRight: 'url(' + require('@/assets/images/crown-right.png') + ')',
-//     backgroundSize: '50% 50%',
-//     zIndex: 96,
-//     rotateDegree: 0
-//   }
-// ]
 
 // 图书分类的名字列表
 export const categoryList = {
