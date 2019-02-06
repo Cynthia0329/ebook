@@ -2,7 +2,7 @@
   <div class="home">
     <div class="home-wrapper">
       <div class="home-icon">
-        <mt-field placeholder="请输入用户名" v-model="username"></mt-field>
+        <mt-field placeholder="请输入ID" v-model="username"></mt-field>
         <mt-field placeholder="请输入密码" type="password" v-model="password"></mt-field>
       </div>
       <div class="home-button-group">

@@ -3,32 +3,39 @@
     <div class="home-wrapper">
       <div class="home-icon">
         <mt-field placeholder="请输入用户名" v-model="username"></mt-field>
+        <mt-field placeholder="请输入ID（只能为纯数字）" type="number" v-model="userId"></mt-field>
         <mt-field placeholder="请输入密码" type="password" v-model="password"></mt-field>
-        <mt-field placeholder="请再次输入密码" type="password2" v-model="password"></mt-field>
+        <!-- <mt-field placeholder="请再次输入密码" type="password" v-model="password2"></mt-field> -->
       </div>
       <div class="home-button-group">
-        <mt-button type="primary" size="large" @click.native="showRegister()">注册</mt-button>
+        <mt-button type="primary" size="large" @click.native="register()">注册</mt-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import { toRegister } from '../../api/user'
+
   export default {
     data() {
       return {
         username: '',
+        userId: Number,
         password: '',
-        password2: ''
+        // password2: ''
       }
     },
     methods: {
-      showLogin() {
-        console.log('你好')
-        this.$router.push('/login')
-      },
-      showRegister() {
-        this.$router.push('/register')
+      register() {
+        toRegister(this.userId, this.username, this.password)
+          .then(res => {
+            if (res && res.status === 200) {
+              console.log(res.data)
+            } else {
+              alert('注册失败！')
+            }
+          })
       }
     }
   }

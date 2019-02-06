@@ -9,7 +9,7 @@ export function addToShelf(book) {
   // 设置新添加的图书为默认图书
   book.type = 1
   shelfList.push(book)
-  // ？？？
+  // 序列化id值
   shelfList = computeId(shelfList)
   // 将...添加到书架上
   shelfList = appendAddToShelf(shelfList)
