@@ -88,7 +88,7 @@
   import Toast from '../../components/common/Toast'
   import { detail } from '../../api/store'
   import { px2rem, realPx } from '../../utils/utils'
-  // import { getLocalForage } from '../../utils/localForage'
+  import { getLocalForage } from '../../utils/localForage'
   import { removeFromBookShelf, addToShelf } from '../../utils/store'
   import { storeShelfMixin } from '../../utils/mixin'
   import { getBookShelf, saveBookShelf } from '../../utils/localStorage'
@@ -173,7 +173,7 @@
             // 移除之后，保存新的数组到本地的shelfList
             saveBookShelf(this.shelfList)
           })
-        } else {  // 书架中不存在，则调用添加的方法
+        } else { // 书架中不存在，则调用添加的方法
           addToShelf(this.bookItem)
           // 从本地中读取新的shelfList，重新设置vuex的值
           this.setShelfList(getBookShelf())

@@ -9,7 +9,7 @@
         <shelf-item :data="item" :style="{height: itemHeight}"></shelf-item>
         <!-- 图书标题 -->
         <div class="shelf-list-title-wrapper">
-          <span class="shelf-list-title title-small">{{ item.title }}</span>
+          <span class="shelf-list-title title-small">{{ item.fileName }}</span>
         </div>
       </div>
     </transition-group>

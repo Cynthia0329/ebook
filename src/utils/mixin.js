@@ -202,13 +202,16 @@ export const storeShelfMixin = {
     // 从本地获取书架列表状态信息数组，并更新vuex中的值
     getShelfList() {
       let shelfList = getBookShelf()
+      console.log(shelfList)
       if (!shelfList) { // 如果本地中不存在书架的数据
         // 读取api接口中的数据
         shelf().then(response => {
-          if (response.status === 200 && response.data && response.data.bookList) {
-            shelfList = appendAddToShelf(response.data.bookList)
-            saveBookShelf(shelfList)
-            return this.setShelfList(shelfList)
+          if (response) {
+            shelfList = appendAddToShelf(response.data.data[0].shelf)
+            // saveBookShelf(shelfList)
+            saveBookShelf([])
+            return this.setShelfList([])
+            // return this.setShelfList(shelfList)
           }
         })
       } else {
@@ -253,11 +256,10 @@ export const storeUserMixin = {
       'setIsLogin'
     ]),
 
-    // 从本地获取消耗的积分
+    // 获取消耗的积分
     getIntegral() {
       let integral = getIntegralCache()
-      if (!integral) { // 如果本地中不存在书架的数据
-        // 读取api接口中的数据
+      if (!integral) { // 如果本地中不存在数据=>读取api接口中的数据
         // shelf().then(response => {
         //   if (response.status === 200 && response.data && response.data.bookList) {
         //     shelfList = appendAddToShelf(response.data.bookList)

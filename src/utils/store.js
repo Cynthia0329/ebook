@@ -2,11 +2,18 @@
 import { getBookShelf, saveBookShelf } from './localStorage'
 
 // 添加图书到书架中
-export function addToShelf(book) {
+export function addToShelf(bookItem) {
   // 从本地中读取书架中的图书列表（包含默认和分类中的所有图书）
   let shelfList = getBookShelf()
   shelfList = removeAddFromShelf(shelfList)
   // 设置新添加的图书为默认图书
+  let book = {
+    type: 1,
+    fileName: bookItem.fileName,
+    cover: bookItem.cover,
+    selected: bookItem.selected,
+    cache: bookItem.bookItem
+  }
   book.type = 1
   shelfList.push(book)
   // 序列化id值
@@ -17,7 +24,7 @@ export function addToShelf(book) {
   saveBookShelf(shelfList)
 }
 
-// 导入一本图书到书架中
+// 从书城导入一本图书到书架中
 export function importShelf(fileName) {
   // 从本地中读取书架中的图书列表（包含默认和分类中的所有图书）
   let shelfList = getBookShelf()
@@ -27,8 +34,7 @@ export function importShelf(fileName) {
     type: 4,
     cache: true,
     selected: false,
-    fileName: fileName,
-    title: fileName
+    fileName: fileName
   }
   shelfList.push(bookImport)
   shelfList = computeId(shelfList)
@@ -69,7 +75,7 @@ export function gotoBookDetail(vue, book) {
     path: '/store/detail',
     query: {
       fileName: book.fileName,
-      category: book.categoryText
+      // category: book.categoryText
     }
   })
 }

@@ -59,6 +59,8 @@
     // 书架初始化：获取书架数据=>
     mounted() {
       this.getShelfList() // 从本地获取书架列表状态信息数组，并更新vuex中的值
+      console.log('输出书架数组')
+      console.log(this.shelfList)
       this.setShelfCategory([])
       this.setCurrentType(1)
     }

@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div class="user">
+    <div class="user-top">
+      <div class="head-icon-wrapper">
+        <span class="icon-person"></span>
+      </div>
+    </div>
     <footer-button :currentTab="3"></footer-button>
     <p>用户阅读总时长： {{ getReadTimeText() }}</p>
     <p>用户目前的积分：{{ nowIntegral }} 分 </p>
@@ -20,23 +25,25 @@
 
     <mt-switch v-model="onOff">是否开启护眼模式</mt-switch>
 
+
   </div>
 </template>
 
 <script>
   import FooterButton from '../../components/common/FooterButton'
-  import { getLocalStorage, getReadTime, saveIntegralCache, saveDownTicket, getDownTicket } from '../../utils/localStorage'
+  import { getLocalStorage, setLocalStorage, getReadTime, saveIntegralCache, saveDownTicket, getDownTicket, getBookShelf } from '../../utils/localStorage'
   import { ebookMixin, storeUserMixin } from '../../utils/mixin'
+  import { localToServer } from '../../api/user'
+  import qs from 'qs'
 
-import { Popup, Toast, Switch  } from 'mint-ui'
+  import { Popup, Toast, Switch  } from 'mint-ui'
+import { shelf } from '../../api/store';
 
 
   export default {
     mixins: [ebookMixin, storeUserMixin],
     data() {
       return {
-        data: [],
-        testID: {},
         popupVisible: false,
         downTags: '',
         currentTags: '',
@@ -61,7 +68,7 @@ import { Popup, Toast, Switch  } from 'mint-ui'
       FooterButton
     },
     watch: {
-      // 监听switch的改变
+      // 监听switch的改变（开启和关闭护眼模式）
       onOff(value) {
         this.setEyeSet(this.onOff)
         if (!value) {
@@ -71,18 +78,26 @@ import { Popup, Toast, Switch  } from 'mint-ui'
     },
     methods: {
 
-      // 遍历localStorage的数据
+      // 遍历localStorage的数据保存在数组中
         AllLocalStorage() {
-          this.testID = {}
+          let data = []
           for (var i = localStorage.length - 1; i >= 0; i--) {
             var key = localStorage.key(i)
-            // var keyValue = localStorage.getItem(localStorage.key(i))
-            var keyValue = getLocalStorage(key)
+            var keyValue = localStorage.getItem(localStorage.key(i))
+            // var keyValue = getLocalStorage(key)
             // console.log(key)
             // console.log(keyValue)
-            this.testID.key = keyValue
-            // this.data.push({key, keyValue})
+            // this.testID.key = keyValue
+            localToServer(key, keyValue)
+              .then(res => {
+                if (res && res.status === 200) {
+                  console.log(res.data)
+                } else {
+                  alert('客户端失败')
+                }
+              })
           }
+          return data
         },
 
         // 兑换积分popu框事件
@@ -150,15 +165,26 @@ import { Popup, Toast, Switch  } from 'mint-ui'
       this.ticket = this.getTicket()
       // 获取当前的护眼设置
       this.onOff = this.eyeSet
-
-
-
     },
   }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../assets/styles/global";
+  .user {
+    height: 100%;
+    .user-top {
+      width: 100%;
+      height: 30%;
+      border-bottom: 10px solid #000;
+      display: flex;
+      justify-content: center;
+      .head-icon-wrapper {
+        width: 10px;
+        height: 10px;
+      }
+    }
+  }
   p {
     font-size: px2rem(20);
     padding-top: px2rem(10);

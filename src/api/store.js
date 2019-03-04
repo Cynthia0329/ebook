@@ -2,10 +2,13 @@ import axios from 'axios'
 import { setLocalForage } from '../utils/localForage' 
 
 // 书架页面调用的api
-export function shelf() {
+export function shelf(id) {
   return axios({
     method: 'get',
-    url: `${process.env.VUE_APP_BASE_URL}/book/shelf`
+    url: `${process.env.VUE_APP_BASE_URL}/book/shelf`,
+    params: {
+      id: id
+    }
   })
 }
 
